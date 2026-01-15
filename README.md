@@ -12,7 +12,7 @@ Development is done with in an aglie style with 4 planned sprints and a linked g
 
 # Project Structure
 ```
-repo root/
+root/
 backend/
   Api/
     Program.cs                # API entrypoint, DI setup, middleware, auth, CORS
@@ -30,4 +30,4 @@ frontend/
 # Project documentation
 The repo folder `\project-documentaion` contains diagrams, notes and other important documents created and gathered while we planned / developed this application.  
 - Diagrams: `class-diagram.png`, `system-architecture-diagram.png`, `use-case-diagram.png`,
-- Different notes: 
+- Notes: `brainstormin.md`, etc
