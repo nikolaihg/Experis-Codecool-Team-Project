@@ -1,0 +1,48 @@
+﻿openapi: 3.0.3
+info:
+  title: Backend TV Show Logger API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5102
+
+paths:
+  /users:
+    get:
+      summary: List users
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create user
+      responses:
+        '201':
+          description: Created
+
+  /users/{userId}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+    put:
+      summary: Delete user by ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
