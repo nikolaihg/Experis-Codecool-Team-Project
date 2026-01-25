@@ -2,47 +2,136 @@
 info:
   title: Backend TV Show Logger API
   version: 1.0.0
-
 servers:
-  - url: http://localhost:5102
-
+  - url: 'http://localhost:5102'
 paths:
   /users:
     get:
       summary: List users
+      tags:
+        - Users
       responses:
         '200':
           description: OK
     post:
       summary: Create user
+      tags:
+        - Users
       responses:
         '201':
           description: Created
 
-  /users/{userId}:
+  '/users/{userId}':
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
     get:
       summary: Get user by ID
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
+      tags:
+        - Users
       responses:
         '200':
           description: OK
         '404':
           description: Not found
     put:
-      summary: Delete user by ID
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
+      summary: Update user entire resource by ID
+      tags:
+        - Users
       responses:
         '200':
           description: OK
         '404':
-          description: Not found          
+          description: Not found
+    delete:
+      summary: Delete user by ID
+      tags:
+        - Users
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+      operationId: delete-users-userId
+    patch:
+      summary:
+      tags:
+        - Users
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+      operationId: patch-users-userId
+  
+  /tvshows:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - TV Shows
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+    post:
+      summary: Your POST endpoint
+      tags:
+        - TV Shows
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+      operationId: post-tvshows
+
+  '/tvshows/{tvshowID}':
+    parameters:
+      - schema:
+          type: string
+        name: tvshowID
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - TV Shows
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+      operationId: get-tvshows-tvshowID
+    delete:
+      summary: Your DELETE endpoint
+      tags:
+        - TV Shows
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+      operationId: delete-tvshows-tvshowID
+    put:
+      summary: Your PUT endpoint
+      tags:
+        - TV Shows
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+      operationId: put-tvshows-tvshowID
+    patch:
+      summary: Your PATCH endpoint
+      tags:
+        - TV Shows
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found
+      operationId: patch-tvshows-tvshowID
