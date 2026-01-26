@@ -1,0 +1,97 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+title TVShow Logger - System Diagram (.NET Architecture)
+
+package "API Layer" {
+  class AuthController
+  class UserController
+  class TVShowController
+  class UserListController
+}
+
+package "Application Layer" {
+  class IUserService <<interface>>
+  class ITVShowService <<interface>>
+  class IUserListService <<interface>>
+
+  class UserService
+  class TVShowService
+  class UserListService
+
+  IUserService <|.. UserService
+  ITVShowService <|.. TVShowService
+  IUserListService <|.. UserListService
+}
+
+package "Domain Models" {
+  class User
+  class TVShow
+  class UserList
+  class UserShowEntry
+
+  enum UserRole
+  enum TVShowStatus
+  enum ListType
+}
+
+package "Data Access Layer" {
+  class IUserRepository <<interface>>
+  class ITVShowRepository <<interface>>
+  class IUserListRepository <<interface>>
+  class IUserShowEntryRepository <<interface>>
+
+  class UserRepository
+  class TVShowRepository
+  class UserListRepository
+  class UserShowEntryRepository
+
+  IUserRepository <|.. UserRepository
+  ITVShowRepository <|.. TVShowRepository
+  IUserListRepository <|.. UserListRepository
+  IUserShowEntryRepository <|.. UserShowEntryRepository
+}
+
+package "Infrastructure" {
+  class AppDbContext
+  class PostgreSQL <<database>>
+}
+
+' Controller -> Service
+AuthController --> IUserService
+UserController --> IUserService
+TVShowController --> ITVShowService
+UserListController --> IUserListService
+
+' Service -> Repository
+UserService --> IUserRepository
+TVShowService --> ITVShowRepository
+UserListService --> IUserListRepository
+UserListService --> IUserShowEntryRepository
+
+' Repository -> DbContext
+UserRepository --> AppDbContext
+TVShowRepository --> AppDbContext
+UserListRepository --> AppDbContext
+UserShowEntryRepository --> AppDbContext
+
+' DbContext -> Database
+AppDbContext --> PostgreSQL
+
+' DbContext -> Domain Models
+AppDbContext ..> User
+AppDbContext ..> TVShow
+AppDbContext ..> UserList
+AppDbContext ..> UserShowEntry
+
+' Domain Relationships (from your class diagram)
+User "1" --> "*" UserList : owns
+UserList "1" --> "*" UserShowEntry : contains
+TVShow "1" --> "*" UserShowEntry : referenced by
+
+User --> UserRole
+TVShow --> TVShowStatus
+UserList --> ListType
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TVShowStatus {
+  ONGOING
+  ENDED
+  HIATUS
+  CANCELLED
+}
+
+enum ListType {
+  DIARY
+  WATCHLIST
+  CUSTOM
+}
+
+class User {
+  +id: UUID
+  +email: String
+  +passwordHash: String
+  +username: String
+  +role: UserRole
+  +createdAt: DateTime
+  +updatedAt: DateTime
+  +isActive: Boolean
+}
+
+class TVShow {
+  +id: UUID
+  +title: String
+  +description: String
+  +releaseYear: Int
+  +posterUrl: String
+  +status: TVShowStatus
+  +isArchived: Boolean
+  +createdAt: DateTime
+}
+
+class UserList {
+  +id: UUID
+  +name: String
+  +type: ListType
+  +isPublic: Boolean
+  +createdAt: DateTime
+  +updatedAt: DateTime
+}
+
+class UserShowEntry {
+  +id: UUID
+  +status: UserWatchStatus
+  +rating: Int
+  +loggedAt: DateTime
+  +position: Int
+}
+
+User "1" --> "*" UserList : owns
+UserList "1" --> "*" UserShowEntry : contains
+TVShow "1" --> "*" UserShowEntry : referenced by
+
+User --> UserRole : uses
+TVShow --> TVShowStatus : uses
+UserList --> ListType : uses
+
+@enduml

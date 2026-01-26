@@ -12,7 +12,7 @@ Development is done with in an aglie style with 4 planned sprints and a linked g
 
 # Project Structure
 ```
-repo root/
+root/
 backend/
   Api/
     Program.cs                # API entrypoint, DI setup, middleware, auth, CORS
@@ -27,26 +27,7 @@ backend/
 frontend/
   frontend-app/ # React web application
 ```
-
-# Commands for later
-- intialize frontend
-```bash
-cd frontend
-npm create vite@latest frontend-app --template react-ts
-cd frontend-app
-npm install
-```
-
-- Add Entity Framework Core
-```bash
-cd Api
-dotnet add package Microsoft.EntityFrameworkCore 
-dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
-```
-- Add ASP.NET Security 
-```bash
-cd Api
-dotnet add package Microsoft.AspNetCore.Authentication
-dotnet add package Microsoft.AspNetCore.Authorization
-```
-
+# Project documentation
+The repo folder `\project-documentaion` contains diagrams, notes and other important documents created and gathered while we planned / developed this application.  
+- Diagrams: `class-diagram.png`, `system-architecture-diagram.png`, `use-case-diagram.png`,
+- Notes: `brainstormin.md`, etc
