@@ -1,6 +1,10 @@
-﻿namespace Api.Data;
+﻿using Api.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext
+namespace Api.Data;
+
+public class AppDbContext : IdentityDbContext<User>
 {
-    
+    public DbSet<User> Users { get; set; }
 }
