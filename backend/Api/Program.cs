@@ -31,6 +31,7 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddControllers();
 
 var app = builder.Build();
 

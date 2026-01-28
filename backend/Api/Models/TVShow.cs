@@ -4,7 +4,7 @@ namespace Api.Models;
 
 public class TVShow
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [MaxLength(200)]
@@ -23,4 +23,9 @@ public class TVShow
     public DateTime CreatedAt { get; set; }
 
     public ICollection<UserShowEntry> UserShowEntryList { get; set; } = new List<UserShowEntry>();
+    public DateOnly ReleaseDate { get; set; }
+    public string Genre { get; set; }
+    public double Rating { get; set; }
+    public int AmountOfEpisodes { get; set; }
+    public int TotalUsersWatched { get; set; }
 }
