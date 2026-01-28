@@ -1,0 +1,33 @@
+﻿services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tvshowlogger-api
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=tvshowlogger;Username=${DB_USER};Password=${DB_PASSWORD}
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    container_name: tvshowlogger-postgres
+    restart: always
+    env_file: .env
+    environment:
+      POSTGRES_DB: tvshowlogger
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
+      
+      
+  
