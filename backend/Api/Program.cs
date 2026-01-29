@@ -18,20 +18,19 @@ builder.Configuration.AddEnvironmentVariables();
 // DB Config stuff
 string BuildConnectionString()
 {
-    var host = Environment.GetEnvironmentVariable("DB_HOST")
-               ?? throw new ArgumentException("DB_HOST is required");
-    var port = Environment.GetEnvironmentVariable("DB_PORT")
-               ?? throw new ArgumentException("DB_PORT is required");
-    var database = Environment.GetEnvironmentVariable("DB_NAME")
-                   ?? throw new ArgumentException("DB_NAME is required");
-    var username = Environment.GetEnvironmentVariable("DB_USER")
-                   ?? throw new ArgumentException("DB_USER is required");
-    var password = Environment.GetEnvironmentVariable("DB_PASSWORD")
-                   ?? throw new ArgumentException("DB_PASSWORD is required");
+    var host = Environment.GetEnvironmentVariable("Database__Host")
+               ?? throw new ArgumentException("Database__Host is required");
+    var port = Environment.GetEnvironmentVariable("Database__Port")
+               ?? throw new ArgumentException("Database__Port is required");
+    var database = Environment.GetEnvironmentVariable("Database__Name")
+                   ?? throw new ArgumentException("Database__Name is required");
+    var username = Environment.GetEnvironmentVariable("Database__User")
+                   ?? throw new ArgumentException("Database__User is required");
+    var password = Environment.GetEnvironmentVariable("Database__Password")
+                   ?? throw new ArgumentException("Database__Password is required");
 
     return $"Host={host};Port={port};Username={username};Password={password};Database={database}";
 }
-
 
 var connectionString = BuildConnectionString();
 
