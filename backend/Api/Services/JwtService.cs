@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Api.Configuration;
-using Microsoft.AspNetCore.Identity;
+using Api.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,7 +17,7 @@ public class JwtService : IJwtService
         _options = options.Value;
     }
 
-    public string GenerateToken(IdentityUser user, IEnumerable<string> roles)
+    public string GenerateToken(User user, IEnumerable<string> roles)
     {
         var claims = new List<Claim>
         {

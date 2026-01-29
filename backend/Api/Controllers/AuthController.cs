@@ -1,5 +1,6 @@
 ﻿using Api.Configuration;
 using Api.DTOs;
+using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +15,9 @@ public class AuthController : ControllerBase
 {
     private readonly JwtOptions _jwtOptions;
     private readonly IJwtService  _jwtService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<User> _userManager;
 
-    public AuthController(IOptions<JwtOptions> jwtOptions, IJwtService jwtService, UserManager<IdentityUser> userManager)
+    public AuthController(IOptions<JwtOptions> jwtOptions, IJwtService jwtService, UserManager<User> userManager)
     {
         _jwtOptions = jwtOptions.Value;
         _jwtService = jwtService;
@@ -27,29 +28,37 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserDto dto)
     {
-        var user = new IdentityUser
+        var user = new User
         {
             UserName = dto.Email,
-            Email = dto.Email
+            Email = dto.Email,
+            Username = dto.Username,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            IsActive = true
         };
+
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
             return BadRequest(result.Errors);
-        
+
         await _userManager.AddToRoleAsync(user, "User");
         var roles = await _userManager.GetRolesAsync(user);
         var token = _jwtService.GenerateToken(user, roles);
 
         return Ok(new
         {
-            token, expiresIn = _jwtOptions.ExpiresInMinutes,
+            token,
+            expiresIn = _jwtOptions.ExpiresInMinutes,
             user = new
             {
-                user.Id, user.Email
+                user.Id,
+                user.Email,
+                user.Username
             }
         });
     }
-    
+
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] UserDto dto)

@@ -4,7 +4,7 @@ namespace Api.Models;
 
 public class UserShowEntry
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     public UserWatchStatus Status { get; set; }
 

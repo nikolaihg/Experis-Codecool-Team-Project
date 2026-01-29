@@ -31,6 +31,11 @@ namespace Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    Username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -73,24 +78,6 @@ namespace Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TVShows", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
-                    PasswordHash = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -200,54 +187,57 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserList",
+                name: "UserLists",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     IsPublic = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserList", x => x.Id);
+                    table.PrimaryKey("PK_UserLists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserList_User_UserId",
+                        name: "FK_UserLists_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserShowEntry",
+                name: "UserShowEntries",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     LoggedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Position = table.Column<int>(type: "integer", nullable: false),
                     UserListId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserListId1 = table.Column<int>(type: "integer", nullable: false),
                     TVShowId = table.Column<Guid>(type: "uuid", nullable: false),
                     TVShowId1 = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserShowEntry", x => x.Id);
+                    table.PrimaryKey("PK_UserShowEntries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserShowEntry_TVShows_TVShowId1",
+                        name: "FK_UserShowEntries_TVShows_TVShowId1",
                         column: x => x.TVShowId1,
                         principalTable: "TVShows",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserShowEntry_UserList_UserListId",
-                        column: x => x.UserListId,
-                        principalTable: "UserList",
+                        name: "FK_UserShowEntries_UserLists_UserListId1",
+                        column: x => x.UserListId1,
+                        principalTable: "UserLists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -290,19 +280,19 @@ namespace Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserList_UserId",
-                table: "UserList",
+                name: "IX_UserLists_UserId",
+                table: "UserLists",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserShowEntry_TVShowId1",
-                table: "UserShowEntry",
+                name: "IX_UserShowEntries_TVShowId1",
+                table: "UserShowEntries",
                 column: "TVShowId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserShowEntry_UserListId",
-                table: "UserShowEntry",
-                column: "UserListId");
+                name: "IX_UserShowEntries_UserListId1",
+                table: "UserShowEntries",
+                column: "UserListId1");
         }
 
         /// <inheritdoc />
@@ -324,22 +314,19 @@ namespace Api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "UserShowEntry");
+                name: "UserShowEntries");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "TVShows");
 
             migrationBuilder.DropTable(
-                name: "UserList");
+                name: "UserLists");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "AspNetUsers");
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Text;
 using Api.Configuration;
 using Api.Data;
+using Api.Models;
 using Api.Services;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,16 +43,15 @@ builder.Services
     .ValidateOnStart();
 
 
-string jwtIssuer = Environment.GetEnvironmentVariable("JWT_VALID_ISSUER")!;
-string jwtAudience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE")!;
-string jwtKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY")!;
-
+string jwtIssuer = Environment.GetEnvironmentVariable("Jwt__Issuer")!;
+string jwtAudience = Environment.GetEnvironmentVariable("Jwt__Audience")!;
+string jwtKey = Environment.GetEnvironmentVariable("Jwt__SigningKey")!;
 
 // Dependency Injection
 // DB stuff
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services
-    .AddIdentity<IdentityUser, IdentityRole>()
+    .AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -91,7 +91,7 @@ builder.Services.Configure<JwtOptions>(options =>
     options.Audience = jwtAudience;
     options.SigningKey = jwtKey;
     options.ExpiresInMinutes = int.Parse(
-        Environment.GetEnvironmentVariable("JWT_EXPIRES_IN_MINUTES")!
+        Environment.GetEnvironmentVariable("Jwt__ExpiresInMinutes")!
     );
 });
 
@@ -114,5 +114,25 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Ensure required Identity roles exist (synchronous blocking call is fine during startup)
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var requiredRoles = new[] { "User", "Admin" };
+    foreach (var roleName in requiredRoles)
+    {
+        var exists = roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult();
+        if (!exists)
+        {
+            var createResult = roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+            if (!createResult.Succeeded)
+            {
+                var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                throw new Exception($"Failed to create role '{roleName}': {errors}");
+            }
+        }
+    }
+}
 
 app.Run();

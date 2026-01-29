@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Api.Models;
 
 namespace Api.Services;
 
 public interface IJwtService
 {
-    string GenerateToken(IdentityUser user, IEnumerable<string> roles);
+    string GenerateToken(User user, IEnumerable<string> roles);
 }
