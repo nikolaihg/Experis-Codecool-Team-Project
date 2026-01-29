@@ -1,4 +1,5 @@
 ﻿using Api.Data;
+using Api.Models;
 
 namespace Api.Repositories;
 
