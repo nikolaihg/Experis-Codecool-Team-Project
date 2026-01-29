@@ -4,7 +4,7 @@ namespace Api.Models;
 
 public class UserShowEntry
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     public UserWatchStatus Status { get; set; }
 
@@ -13,7 +13,7 @@ public class UserShowEntry
     public DateTime LoggedAt { get; set; }
 
     public int Position { get; set; }
-
+    
     [Required] // FK to userlist, I don't know if this is necessary
     public Guid UserListId { get; set; }
     public UserList UserList { get; set; } 

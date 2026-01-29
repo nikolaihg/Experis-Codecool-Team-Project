@@ -1,5 +1,6 @@
 ﻿using Api.Data;
 using Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories;
 
@@ -14,24 +15,24 @@ public class UserShowEntryRepository
     
     public async Task<IEnumerable<UserShowEntry>> GetAll()
     {
-        return await _context.UserShowEntrys.AsNoTracking().ToListAsync();
+        return await _context.UserShowEntries.AsNoTracking().ToListAsync();
     }
 
     public async Task<UserShowEntry> Create(UserShowEntry item)
     {
-        await _context.UserShowEntrys.AddAsync(item);
+        await _context.UserShowEntries.AddAsync(item);
         await _context.SaveChangesAsync();
         return item;
     }
 
     public async Task<UserShowEntry?> Read(int id)
     {
-        return await _context.UserShowEntrys.FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.UserShowEntries.FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<bool> Update(int id, UserShowEntry item)
     {
-        var existing = await _context.UserShowEntrys.FirstOrDefaultAsync(x => x.Id == id);
+        var existing = await _context.UserShowEntries.FirstOrDefaultAsync(x => x.Id == id);
         
         existing.Status = item.Status;
         existing.Rating = item.Rating;
@@ -50,7 +51,7 @@ public class UserShowEntryRepository
 
     public async Task<bool> Delete(int id)
     {
-        var item = await _context.UserShowEntrys.FirstOrDefaultAsync(x => x.Id == id);
+        var item = await _context.UserShowEntries.FirstOrDefaultAsync(x => x.Id == id);
         _context.Remove(item);
         var affected = await _context.SaveChangesAsync();
         return affected > 0;

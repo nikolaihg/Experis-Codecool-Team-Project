@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Api.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<IdentityUser>(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<User>(options)
 {
-    // future domain model tables go here: 
+    public DbSet<User> Users { get; set; }
+    public DbSet<TVShow> TVShows {get; set;}
+    public DbSet<UserList> UserLists {get; set;}
+    public DbSet<UserShowEntry> UserShowEntries {get; set;}
+    
 }

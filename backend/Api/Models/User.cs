@@ -1,25 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace Api.Models;
 
-public class User
+public class User : IdentityUser
 {
-    public Guid Id { get; set; }
-
-    [Required]
-    [MaxLength(320)]
-    public string Email { get; set; }
-    
-    [Required]
-    [MaxLength(200)]
-    public string PasswordHash { get; set; }
-    
     [Required]
     [MaxLength(50)]
     public string Username { get; set; }
-
-    public UserRole Role { get; set; }
-
+    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 

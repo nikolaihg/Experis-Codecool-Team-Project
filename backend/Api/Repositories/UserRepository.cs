@@ -26,11 +26,11 @@ public class UserRepository : IUserRepository
         return item;
     }
     
-    public Task<User?> Read(int id)
+    public Task<User?> Read(string id)
     {
         return _context.Users.FirstOrDefaultAsync(u => u.Id == id);
     }    
-    public async Task<bool> Update(int Id, User item)
+    public async Task<bool> Update(string Id, User item)
     {
         var existing = await _context.Users.FirstOrDefaultAsync(u => u.Id == Id);
         
@@ -41,7 +41,7 @@ public class UserRepository : IUserRepository
         return affected > 0;
     }
     
-    public async Task<bool> Delete(int id)
+    public async Task<bool> Delete(string id)
     {
         var _user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         _context.Remove(_user);
