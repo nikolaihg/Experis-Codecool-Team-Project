@@ -5,6 +5,7 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -15,6 +16,7 @@ public class UserController : ControllerBase
     }
     
     [HttpGet]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> GetAll()
     {
         var users = await _userService.GetAll();
@@ -22,6 +24,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var user = await _userService.GetById(id);
@@ -32,6 +35,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> Update(Guid id)
     {
         var success = await _userService.Update(id);
@@ -42,6 +46,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var success = await _userService.Delete(id);
@@ -52,6 +57,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{userId:guid}/lists")]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> GetUserLists(Guid userId)
     {
         var lists = await _userService.GetUserLists(userId);
@@ -63,6 +69,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("{userId:guid}/lists")]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> CreateUserList(Guid userId)
     {
         var created = await _userService.CreateUserList(userId);
@@ -74,6 +81,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("{userId:guid}/lists/{listId:int}")]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> UpdateUserList(Guid userId, int listId)
     {
         var success = await _userService.UpdateUserList(userId, listId);
@@ -84,6 +92,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{userId:guid}/lists/{listId:int}")]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> DeleteUserList(Guid userId, int listId)
     {
         var success = await _userService.DeleteUserList(userId, listId);
