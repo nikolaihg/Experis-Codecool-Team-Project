@@ -1,5 +1,7 @@
 using System.Text;
+using Api.Configuration;
 using Api.Data;
+using Api.Services;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -33,9 +35,17 @@ string BuildConnectionString()
 var connectionString = BuildConnectionString();
 
 // JWT Config stuff
+builder.Services
+    .AddOptions<JwtOptions>()
+    .Bind(builder.Configuration.GetSection("Jwt"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+
 string jwtIssuer = Environment.GetEnvironmentVariable("JWT_VALID_ISSUER")!;
 string jwtAudience = Environment.GetEnvironmentVariable("JWT_VALID_AUDIENCE")!;
 string jwtKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY")!;
+
 
 // Dependency Injection
 // DB stuff
@@ -75,6 +85,19 @@ builder.Services.AddAuthorizationBuilder()
         .RequireAuthenticatedUser()
         .Build());
 
+builder.Services.Configure<JwtOptions>(options =>
+{
+    options.Issuer = jwtIssuer;
+    options.Audience = jwtAudience;
+    options.SigningKey = jwtKey;
+    options.ExpiresInMinutes = int.Parse(
+        Environment.GetEnvironmentVariable("JWT_EXPIRES_IN_MINUTES")!
+    );
+});
+
+// Services
+builder.Services.AddScoped<IJwtService, JwtService>();
+
 // Web stuff
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -87,8 +110,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapControllers();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
+
 app.Run();
