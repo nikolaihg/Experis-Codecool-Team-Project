@@ -2,6 +2,7 @@ using System.Text;
 using Api.Configuration;
 using Api.Data;
 using Api.Models;
+using Api.Repositories;
 using Api.Services;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -101,16 +102,25 @@ builder.Services.Configure<JwtOptions>(options =>
 // Services
 builder.Services.AddScoped<IJwtService, JwtService>();
 
+// Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserListRepository, UserListRepository>();
+builder.Services.AddScoped<ITVShowRepository, TVShowRepository>();
+builder.Services.AddScoped<IUserShowEntryRepository, UserShowEntryRepository>();
+
 // Web stuff
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
