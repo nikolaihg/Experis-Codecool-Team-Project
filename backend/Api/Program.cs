@@ -10,9 +10,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-DotEnv.Load();
-
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsDevelopment() && Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != "true")
+{
+    DotEnv.Load();
+}
+
 builder.Configuration.AddEnvironmentVariables();
 
 // DB Config stuff
@@ -113,6 +117,13 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Run migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 // Ensure required Identity roles exist (synchronous blocking call is fine during startup)
 using (var scope = app.Services.CreateScope())
