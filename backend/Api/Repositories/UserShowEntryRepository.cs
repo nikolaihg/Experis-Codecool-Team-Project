@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories;
 
-public class UserShowEntryRepository
+public class UserShowEntryRepository : IUserShowEntryRepository
 {
     private readonly AppDbContext _context;
     
