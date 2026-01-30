@@ -32,7 +32,6 @@ public class AuthController : ControllerBase
         {
             UserName = dto.Email,
             Email = dto.Email,
-            Username = dto.Username,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             IsActive = true
@@ -54,7 +53,7 @@ public class AuthController : ControllerBase
             {
                 user.Id,
                 user.Email,
-                user.Username
+                user.UserName
             }
         });
     }

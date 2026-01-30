@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Api.Repositories;
+using Api.DTOs;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers;
@@ -20,22 +21,40 @@ public class UserController : ControllerBase
     }
     
     [HttpGet]
-    [Authorize(Roles = "User, Admin")]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> GetAll()
     {
         var users = await _userRepository.GetAll();
-        return Ok(users);
+        var userDtos = users.Select(u => new UserResponseDto
+        {
+            Id = u.Id,
+            Email = u.Email,
+            UserName = u.UserName,
+            CreatedAt = u.CreatedAt,
+            UpdatedAt = u.UpdatedAt,
+            IsActive = u.IsActive
+        }).ToList();
+        return Ok(userDtos);
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "User, Admin")]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> GetById(string id)
     {
         var user = await _userRepository.Read(id);
         if (user == null)
             return NotFound();
 
-        return Ok(user);
+        var userDto = new UserResponseDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            UserName = user.UserName,
+            CreatedAt = user.CreatedAt,
+            UpdatedAt = user.UpdatedAt,
+            IsActive = user.IsActive
+        };
+        return Ok(userDto);
     }
 
     [HttpPut("{id}")]
