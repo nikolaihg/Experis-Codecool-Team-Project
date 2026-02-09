@@ -5,10 +5,6 @@ namespace Api.Models;
 
 public class User : IdentityUser
 {
-    [Required]
-    [MaxLength(50)]
-    public string Username { get; set; }
-    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
