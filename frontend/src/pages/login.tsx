@@ -38,7 +38,7 @@ const Login: React.FC = () => {
       </div>
 
       <button type="submit">Log in</button>
-      <button type="button" onClick={() => console.log("Redirect to register")}>
+      <button type="button" onClick={() => window.location.href = "/register"}>
         Register
       </button>
     </form>
