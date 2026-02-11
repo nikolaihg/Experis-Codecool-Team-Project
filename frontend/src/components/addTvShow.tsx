@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
 import { getUserLists, addTvShowToList } from "../services/api";
-import { useAuth } from "../auth/AuthContext";
+import { useAuth } from "../auth/AuthContext"
 
 type UserListOption = {
 	id: number;
