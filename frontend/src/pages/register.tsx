@@ -23,6 +23,10 @@ const Register: React.FC = () => {
       errors.push("Password must include at least one number.");
     }
 
+    if(!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+      errors.push("Password must include at least one special character.");
+    }
+
     return errors;
   };
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,8 +78,8 @@ const Register: React.FC = () => {
           }}
           autoComplete="new-password"
           minLength={8}
-          pattern="(?=.*[A-Z])(?=.*\d).{8,}"
-          title="Password must be at least 8 characters and include one capital letter and one number."
+          pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>]).{8,}"
+          title="Password must be at least 8 characters and include one capital letter, one number, and one special character."
         />
         {passwordErrors.length > 0 && (
           <ul>    
