@@ -1,0 +1,17 @@
+.app {
+  min-height: 100vh;  
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;  
+  padding: 24px;
+}
+
+.app-footer {
+  border-top: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  background: #fff;
+}
