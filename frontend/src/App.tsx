@@ -5,23 +5,19 @@ import About from './pages/About'
 import { Header } from './components/Header/Header'
 import { Footer } from './components/Footer/Footer'
 import WatchList from './pages/WatchList'
+import Login from './pages/login'
+import Register from './pages/register'
 
 
 function App() {
   return (
-  <div className="app">
-      <Header onSearch={(q) => console.log("Search:", q)} />
-
-      <main className="app-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/watchlist" element={<WatchList />} />
-        </Routes>
-      </main>
-
-      <Footer />
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/watchlist" element={<WatchList />} />
+    </ Routes>
   )
 }
 
