@@ -88,6 +88,9 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		};
 	}, [userId]);
 
+	const lists = getUserLists("currentUserId"); // Replace with actual user ID or context
+	form.tvShowId = tvShow.id;
+
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
 	}, [form.userListId, form.tvShowId, isSubmitting]);
