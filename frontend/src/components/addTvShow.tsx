@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
+import { getUserLists } from "../services/api";
 
 type UserListOption = {
 	id: number;
@@ -20,8 +21,7 @@ export type AddTvShowPayload = {
 };
 
 type AddTvShowProps = {
-	lists: UserListOption[];
-	tvShows: TVShowOption[];
+	tvShow: TVShowOption;
 	onAdd?: (payload: AddTvShowPayload) => Promise<void> | void;
 };
 
@@ -39,11 +39,14 @@ const defaultForm: FormState = {
 	rating: "",
 };
 
-export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
+export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 	const [form, setForm] = useState<FormState>(defaultForm);
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const lists = getUserLists("currentUserId"); // Replace with actual user ID or context
+	form.tvShowId = tvShow.id;
 
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
@@ -58,8 +61,8 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 		setError("");
 		setSuccess("");
 
-		if (form.userListId === "" || form.tvShowId === "") {
-			setError("Choose a list and a TV show before adding.");
+		if (form.userListId === "") {
+			setError("Choose a list before adding.");
 			return;
 		}
 
@@ -79,6 +82,7 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 		try {
 			setIsSubmitting(true);
 			if (onAdd) {
+				console.log("Calling onAdd with payload:", payload);
 				await onAdd(payload);
 			} else {
 				console.log("AddTvShow payload:", payload);
