@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
 import { getUserLists } from "../services/api";
+import { useAuth } from "../auth/AuthContext"
 
 type UserListOption = {
 	id: number;
@@ -44,12 +45,26 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [lists, setLists] = useState<UserListOption[]>([]);
+    
+    const { user } = useAuth();
 
-	let promise = getUserLists("currentUserId"); // Replace with actual user ID or context
-	let lists = promise.then((data) => data as UserListOption[]).catch((err) => {
-		console.error("Failed to fetch user lists:", err);
-		return [];
-	});
+    useEffect(() => {
+        const loadLists = async () => {
+            if (!user?.id) return;
+            try {
+                const data = await getUserLists(user.id);
+                setLists(data);
+            } catch (err) {
+                console.error("Failed to load lists:", err);
+            }
+        };
+        loadLists();
+    }, [user?.id]);
+
+    useEffect(() => {
+        setForm((prev) => ({ ...prev, tvShowId: tvShow.id }));
+    }, [tvShow.id]);
 	form.tvShowId = tvShow.id;
 
 	const canSubmit = useMemo(() => {
