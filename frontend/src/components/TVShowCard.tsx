@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from "./TVShowCard.module.css"
-import { AddTvShow} from './addTvShow';
+import { AddTvShow } from './addTvShow';
 // import './App.css'
 
 type TVShow = {
