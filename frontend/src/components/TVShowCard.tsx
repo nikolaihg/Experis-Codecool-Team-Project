@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from "./TVShowCard.module.css"
+import { AddTvShow, AddTvShowPayload } from './addTvShow';
 // import './App.css'
 
 type TVShow = {
@@ -18,8 +19,7 @@ type TVShowCardProps = {
 
 export function TVShowCard({ tvShow }: TVShowCardProps ) {
   const [data, setData] = useState([])
-
-
+  const [adding, setAdding] = useState(false)
 
   return (
     <>
@@ -32,7 +32,8 @@ export function TVShowCard({ tvShow }: TVShowCardProps ) {
                 <p>Rating: {tvShow.rating} / 5</p>
                 <p>{tvShow.genre}</p>
             </div>
-
+            <button className={styles.button} onClick={() => setAdding(!adding)}> + </button>
+            {adding ? <AddTvShow lists={[]} tvShows={[]} onAdd={(payload: AddTvShowPayload) => console.log("Adding TV show with payload:", payload)} /> : null}
         </div>
     </>
   )
