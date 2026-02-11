@@ -7,7 +7,7 @@ namespace Api.Controllers;
 
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
 public class TVShowController : ControllerBase
 {
