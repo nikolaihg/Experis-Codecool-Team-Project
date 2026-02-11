@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
 import { getUserLists, addTvShowToList } from "../services/api";
 import { useAuth } from "../auth/AuthContext";
-=======
-import { useMemo, useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
->>>>>>> ed64079 (Started working on addTvShow)
 
 type UserListOption = {
 	id: number;
@@ -21,22 +16,13 @@ type TVShowOption = {
 
 export type AddTvShowPayload = {
 	userListId: number;
-<<<<<<< HEAD
 	tvShowId: number;
-=======
-	tvShowId: string;
->>>>>>> ed64079 (Started working on addTvShow)
 	status?: string;
 	rating?: number;
 };
 
 type AddTvShowProps = {
-<<<<<<< HEAD
 	tvShow: TVShowOption;
-=======
-	lists: UserListOption[];
-	tvShows: TVShowOption[];
->>>>>>> ed64079 (Started working on addTvShow)
 	onAdd?: (payload: AddTvShowPayload) => Promise<void> | void;
 };
 
@@ -54,16 +40,11 @@ const defaultForm: FormState = {
 	rating: "",
 };
 
-<<<<<<< HEAD
 export function AddTvShow({ tvShow }: AddTvShowProps) {
-=======
-export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
->>>>>>> ed64079 (Started working on addTvShow)
 	const [form, setForm] = useState<FormState>(defaultForm);
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-<<<<<<< HEAD
 	const [lists, setLists] = useState<UserListOption[]>([]);
 	const [listsError, setListsError] = useState<string>("");
 
@@ -106,8 +87,6 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 			isActive = false;
 		};
 	}, [userId]);
-=======
->>>>>>> ed64079 (Started working on addTvShow)
 
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
@@ -122,41 +101,28 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 		setError("");
 		setSuccess("");
 
-<<<<<<< HEAD
 		if (form.userListId === "") {
 			setError("Choose a list before adding.");
 			console.log("Submission error: No list selected");
-=======
-		if (form.userListId === "" || form.tvShowId === "") {
-			setError("Choose a list and a TV show before adding.");
->>>>>>> ed64079 (Started working on addTvShow)
 			return;
 		}
 
 		const ratingValue = form.rating.trim() === "" ? undefined : Number(form.rating);
 		if (ratingValue !== undefined && (Number.isNaN(ratingValue) || ratingValue < 0 || ratingValue > 5)) {
 			setError("Rating must be a number from 0 to 5.");
-<<<<<<< HEAD
 			console.log("Submission error: Invalid rating value");
-=======
->>>>>>> ed64079 (Started working on addTvShow)
 			return;
 		}
 
 		const payload: AddTvShowPayload = {
 			userListId: Number(form.userListId),
-<<<<<<< HEAD
 			tvShowId: Number(form.tvShowId),
-=======
-			tvShowId: form.tvShowId,
->>>>>>> ed64079 (Started working on addTvShow)
 			status: form.status || undefined,
 			rating: ratingValue,
 		};
 
 		try {
 			setIsSubmitting(true);
-<<<<<<< HEAD
 			if(userId){
 				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId.toString(), payload.status, payload.rating)
 				setSuccess("Added to list.");
@@ -165,15 +131,6 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 				console.log("UserId was undefined when adding tvshow")
 			}
 		
-=======
-			if (onAdd) {
-				await onAdd(payload);
-			} else {
-				console.log("AddTvShow payload:", payload);
-			}
-			setSuccess("Added to list.");
-			setForm(defaultForm);
->>>>>>> ed64079 (Started working on addTvShow)
 		} catch (err) {
 			setError("Failed to add TV show. Try again.");
 			console.error(err);
@@ -199,7 +156,6 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 			</div>
 
 			<div>
-<<<<<<< HEAD
 				<label htmlFor="status">Status</label>
 				<select id="status" value={form.status} onChange={handleChange("status")}>
 					<option value="0">Planning</option>
@@ -207,28 +163,6 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 					<option value="2">Completed</option>
 					<option value="3">On Hold</option>
 					<option value="4">Dropped</option>
-=======
-				<label htmlFor="tvshow">TV Show</label>
-				<select id="tvshow" value={form.tvShowId} onChange={handleChange("tvShowId")}
-				>
-					<option value="">Select a TV show</option>
-					{tvShows.map((show) => (
-						<option key={show.id} value={show.id}>
-							{show.title}
-						</option>
-					))}
-				</select>
-			</div>
-
-			<div>
-				<label htmlFor="status">Status</label>
-				<select id="status" value={form.status} onChange={handleChange("status")}>
-					<option value="Planning">Planning</option>
-					<option value="Watching">Watching</option>
-					<option value="Completed">Completed</option>
-					<option value="OnHold">On Hold</option>
-					<option value="Dropped">Dropped</option>
->>>>>>> ed64079 (Started working on addTvShow)
 				</select>
 			</div>
 
@@ -244,18 +178,11 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 					onChange={handleChange("rating")}
 				/>
 			</div>
-<<<<<<< HEAD
 			{listsError && <p>{listsError}</p>}
 			{error && <p>{error}</p>}
 			{success && <p>{success}</p>}
 
 			<button className={styles.button} type="submit" disabled={!canSubmit}>
-=======
-			{error && <p>{error}</p>}
-			{success && <p>{success}</p>}
-
-			<button type="submit" disabled={!canSubmit}>
->>>>>>> ed64079 (Started working on addTvShow)
 				{isSubmitting ? "Adding..." : "Add to list"}
 			</button>
 		</form>
