@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import styles from "./TVShowCard.module.css";
 
 type UserListOption = {
 	id: number;
@@ -109,19 +110,6 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 			</div>
 
 			<div>
-				<label htmlFor="tvshow">TV Show</label>
-				<select id="tvshow" value={form.tvShowId} onChange={handleChange("tvShowId")}
-				>
-					<option value="">Select a TV show</option>
-					{tvShows.map((show) => (
-						<option key={show.id} value={show.id}>
-							{show.title}
-						</option>
-					))}
-				</select>
-			</div>
-
-			<div>
 				<label htmlFor="status">Status</label>
 				<select id="status" value={form.status} onChange={handleChange("status")}>
 					<option value="Planning">Planning</option>
@@ -147,7 +135,7 @@ export function AddTvShow({ lists, tvShows, onAdd }: AddTvShowProps) {
 			{error && <p>{error}</p>}
 			{success && <p>{success}</p>}
 
-			<button type="submit" disabled={!canSubmit}>
+			<button className={styles.button} type="submit" disabled={!canSubmit}>
 				{isSubmitting ? "Adding..." : "Add to list"}
 			</button>
 		</form>
