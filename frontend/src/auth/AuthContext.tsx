@@ -5,6 +5,7 @@ import { createContext, useState } from "react";
 export interface AuthContextType {
     isAuthenticated: boolean,
     token: string | null,
+    user: {id: string, email: string} | null,
     login: (username: string, email: string, password: string) => Promise<void>,
     logout: () => void
     register: (username: string, email: string, password: string) => Promise<void>,
@@ -19,11 +20,13 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [token, setToken] = useState(() => { return localStorage.getItem("auth_token") })
+    const [user, setUser] = useState(null)
     const isAuthenticated = !!token;
 
     const value = {
         isAuthenticated,
         token,
+        user,
         login,
         logout,
         register
@@ -48,6 +51,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             localStorage.setItem("auth_token", tokenFromServer)
             setToken(tokenFromServer)
+            setUser(json.user)
             console.log(tokenFromServer)
 
         } catch(err) {
@@ -59,6 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     function logout(){
         localStorage.removeItem("auth_token")
         setToken(null)
+        setUser(null)
     }
 
     async function register(username: string, email: string, password: string) {
@@ -80,6 +85,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             localStorage.setItem("auth_token", tokenFromServer)
             setToken(tokenFromServer)
+            setUser(json.user)
             console.log(tokenFromServer)
  
         } catch(err) {
