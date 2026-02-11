@@ -1,7 +1,13 @@
 import { useState } from "react";
+import { useAuth } from "../../auth/AuthContext";
 
 export function ProfileMenu() {
   const [open, setOpen] = useState(false);
+  const { logout } = useAuth()
+
+  const handleLogOut = () => {
+    logout()
+  }
 
   return (
     <div className="profile-wrapper">
@@ -14,7 +20,7 @@ export function ProfileMenu() {
 
       {open && (
         <div className="profile-menu">
-          <button className="logout-btn">Log out</button>
+          <button className="logout-btn" onClick={handleLogOut}>Log out</button>
         </div>
       )}
     </div>

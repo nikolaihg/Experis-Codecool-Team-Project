@@ -1,15 +1,26 @@
 import React from "react";
 import { useState } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("");
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // stops page refresh
     console.log("Logging in with:", { username, password });
     // Here you'll call your login API later
+    try {
+      await login(username, email, password)
+    } catch(err){
+      console.log(err)
+    }
+    navigate("/")
   };
 
   return (
@@ -23,6 +34,16 @@ const Login: React.FC = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           autoComplete="username"
+        />
+      </div>
+      <div>
+        <label htmlFor="email">Email </label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
         />
       </div>
 

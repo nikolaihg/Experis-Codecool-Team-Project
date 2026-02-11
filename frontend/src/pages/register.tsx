@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 const Register: React.FC = () => {
@@ -7,6 +9,8 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [email, setEmail] = useState<string>("");
+  const { register } = useAuth()
+  const navigate = useNavigate()
 
   const validatePassword = (value: string) => {
     const errors: string[] = [];
@@ -29,7 +33,8 @@ const Register: React.FC = () => {
 
     return errors;
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // stops page refresh
     const errors = validatePassword(password);
     setPasswordErrors(errors);
@@ -39,6 +44,12 @@ const Register: React.FC = () => {
     }
     console.log("Registering with:", { username, password });
     // Here you'll call your registration API later
+    try {
+      await register(username, email, password)
+    } catch(err){
+      console.log(err)
+    }
+    navigate("/")
   };
 
   return (

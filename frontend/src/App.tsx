@@ -5,8 +5,9 @@ import About from './pages/About'
 import { Header } from './components/Header/Header'
 import { Footer } from './components/Footer/Footer'
 import WatchList from './pages/WatchList'
-import Login from './pages/login'
-import Register from './pages/register'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import { RequireAuth } from './auth/RequireAuth'
 
 function App() {
   return (
@@ -14,11 +15,14 @@ function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/watchlist" element={<WatchList />} />
+
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/watchlist" element={<WatchList />} />
+        </Route>
       </Routes>
 
       <Footer />
