@@ -45,7 +45,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [list, setLists] = useState<UserListOption[]>([]);
+	const [lists, setLists] = useState<UserListOption[]>([]);
 	const [listsError, setListsError] = useState<string>("");
 
 	const { user } = useAuth();
@@ -87,9 +87,6 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 			isActive = false;
 		};
 	}, [userId]);
-
-	const lists = getUserLists(userId || "");
-	form.tvShowId = tvShow.id;
 
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
