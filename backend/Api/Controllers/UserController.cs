@@ -59,7 +59,7 @@ public class UserController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] User user)
+    public async Task<IActionResult> Update(string id, [FromBody] User user)
     {
         var success = await _userRepository.Update(id, user);
         if (!success)
@@ -70,7 +70,7 @@ public class UserController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(string id)
     {
         var success = await _userRepository.Delete(id);
         if (!success)
@@ -83,11 +83,14 @@ public class UserController : ControllerBase
     [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> GetUserLists(string userId)
     {
+        Console.WriteLine($"Getting lists for user {userId}"); // Debug log
         var user = await _userRepository.Read(userId);
         if (user == null)
             return NotFound("User not found.");
 
         var lists = user.UserLists;
+        if(lists == null)
+            return NotFound("User lists not found.");
         return Ok(lists);
     }
 
