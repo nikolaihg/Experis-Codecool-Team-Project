@@ -37,7 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function login(username: string, email: string, password: string) {
         try {
-            const response = await fetch("http://localhost:5102/api/Auth/login", 
+            const response = await fetch("/api/Auth/login", 
                 {
                     method: 'POST',
                     headers: {
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function register(username: string, email: string, password: string) {
         try {
-            const response = await fetch("http://localhost:5102/api/Auth/register", 
+            const response = await fetch("/api/Auth/register", 
                 {
                     method: 'POST',
                     headers: {
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         };
 
         try {
-            const response = await fetch(`http://localhost:5102/api/User/${userId}/lists`,
+            const response = await fetch(`/api/User/${userId}/lists`,
                 {
                     method: 'POST',
                     headers: {
