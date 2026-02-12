@@ -1,17 +1,8 @@
-.app {
-  min-height: 100vh;  
-  display: flex;
-  flex-direction: column;
-}
-
-.app-content {
-  flex: 1;  
-  padding: 24px;
-}
-
 .app-footer {
-  border-top: 1px solid #ddd;
-  padding: 12px;
+  border-top: 1px solid var(--color-surface);
+  padding: 20px;
   text-align: center;
-  background: #fff;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-muted);
+  font-size: 0.9em;
 }
