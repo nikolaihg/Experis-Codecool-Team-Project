@@ -71,7 +71,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function register(username: string, email: string, password: string) {
         try {
+<<<<<<< HEAD
             const response = await fetch("/api/Auth/register", 
+=======
+            const response = await fetch("http://localhost:5102/api/auth/register", 
+>>>>>>> 2f3cc04 (And again)
                 {
                     method: 'POST',
                     headers: {
