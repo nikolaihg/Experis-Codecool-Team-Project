@@ -21,7 +21,7 @@ public class UserController : ControllerBase
     }
     
     [HttpGet]
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> GetAll()
     {
         var users = await _userRepository.GetAll();
@@ -38,7 +38,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> GetById(string id)
     {
         var user = await _userRepository.Read(id);
@@ -80,7 +80,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{userId}/lists")]
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> GetUserLists(string userId)
     {
         var user = await _userRepository.Read(userId);
@@ -92,23 +92,32 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("{userId}/lists")]
-    [Authorize(Roles = "User")]
-    public async Task<IActionResult> CreateUserList(string userId, [FromBody] UserList userList)
+    [Authorize(Roles = "User, Admin")]
+    public async Task<IActionResult> CreateUserList(string userId, [FromBody] CreateUserListDto dto)
     {
         var user = await _userRepository.Read(userId);
         if (user == null)
             return NotFound("User not found.");
+        
+        var now = DateTime.UtcNow;
 
-        userList.UserId = userId;
-        userList.CreatedAt = DateTime.Now;
-        userList.UpdatedAt = DateTime.Now;
+        var userList = new UserList
+        {
+            Name = dto.Name,
+            Type = dto.Type,
+            IsPublic = dto.IsPublic,
+            CreatedAt = now,
+            UpdatedAt = now,
+            UserId = userId,
+            User = null
+        };
 
         var created = await _userListRepository.Create(userList);
-        return CreatedAtAction(nameof(GetUserLists), new { userId }, created);
+        return Ok(created.Id);
     }
 
     [HttpPut("{userId}/lists/{listId:int}")]
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> UpdateUserList(string userId, int listId, [FromBody] UserList userList)
     {
         var user = await _userRepository.Read(userId);
@@ -128,7 +137,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{userId}/lists/{listId:int}")]
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<IActionResult> DeleteUserList(string userId, int listId)
     {
         var user = await _userRepository.Read(userId);
