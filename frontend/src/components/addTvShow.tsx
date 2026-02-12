@@ -88,24 +88,6 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		};
 	}, [userId]);
 
-    useEffect(() => {
-        const loadLists = async () => {
-            if (!user?.id) return;
-            try {
-                const data = await getUserLists(user.id);
-                setLists(data);
-            } catch (err) {
-                console.error("Failed to load lists:", err);
-            }
-        };
-        loadLists();
-    }, [user?.id]);
-
-    useEffect(() => {
-        setForm((prev) => ({ ...prev, tvShowId: tvShow.id }));
-    }, [tvShow.id]);
-	form.tvShowId = tvShow.id;
-
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
 	}, [form.userListId, form.tvShowId, isSubmitting]);
@@ -118,8 +100,6 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		e.preventDefault();
 		setError("");
 		setSuccess("");
-
-		console.log("Submitting form with values:", form);
 
 		if (form.userListId === "") {
 			setError("Choose a list before adding.");
@@ -202,7 +182,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 			{error && <p>{error}</p>}
 			{success && <p>{success}</p>}
 
-			<button className={styles.button} type="submit" >
+			<button className={styles.button} type="submit" disabled={!canSubmit}>
 				{isSubmitting ? "Adding..." : "Add to list"}
 			</button>
 		</form>
