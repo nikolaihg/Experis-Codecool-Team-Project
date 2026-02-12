@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styles from "./TVShowCard.module.css"
 import { AddTvShow } from './addTvShow';
 // import './App.css'
