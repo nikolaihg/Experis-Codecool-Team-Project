@@ -100,11 +100,12 @@ public class UserController : ControllerBase
             return NotFound("User not found.");
 
         userList.UserId = userId;
-        userList.CreatedAt = DateTime.Now;
-        userList.UpdatedAt = DateTime.Now;
+        userList.User = null;
+        userList.CreatedAt = DateTime.UtcNow;
+        userList.UpdatedAt = DateTime.UtcNow;
 
         var created = await _userListRepository.Create(userList);
-        return CreatedAtAction(nameof(GetUserLists), new { userId }, created);
+        return Ok(userList.Id);
     }
 
     [HttpPut("{userId}/lists/{listId:int}")]
