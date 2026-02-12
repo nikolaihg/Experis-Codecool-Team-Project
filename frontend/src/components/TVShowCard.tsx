@@ -29,7 +29,7 @@ export function TVShowCard({ tvShow }: TVShowCardProps ) {
             <div className={styles.content1}>
                 <h3>{tvShow.title}</h3>
                 <p>{tvShow.releaseYear}</p>
-                <p>Rating: {tvShow.rating} / 5</p>
+                <p>Rating: {tvShow.rating} / 10</p>
                 <p>{tvShow.genre}</p>
             </div>
 
