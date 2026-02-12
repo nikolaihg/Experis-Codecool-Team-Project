@@ -39,7 +39,7 @@ public class UserController : ControllerBase
 
     [HttpGet("{id}")]
     [Authorize(Roles = "User")]
-    public async Task<IActionResult> GetById(string id)
+    public async Task<IActionResult> GetById(Guid id)
     {
         var user = await _userRepository.Read(id);
         if (user == null)
@@ -59,7 +59,7 @@ public class UserController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> Update(string id, [FromBody] User user)
+    public async Task<IActionResult> Update(Guid id, [FromBody] User user)
     {
         var success = await _userRepository.Update(id, user);
         if (!success)
@@ -70,7 +70,7 @@ public class UserController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         var success = await _userRepository.Delete(id);
         if (!success)
