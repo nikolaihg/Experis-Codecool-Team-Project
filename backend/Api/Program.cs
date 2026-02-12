@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Api.Configuration;
 using Api.Data;
 using Api.Models;
@@ -66,7 +67,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: myAllowedOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:5174")
+            policy.WithOrigins("http://localhost:5173")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
@@ -122,7 +123,15 @@ builder.Services.AddScoped<ITVShowRepository, TVShowRepository>();
 builder.Services.AddScoped<IUserShowEntryRepository, UserShowEntryRepository>();
 
 // Web stuff
-builder.Services.AddControllers();
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        o.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
+
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -6,6 +6,7 @@ export interface AuthContextType {
     isAuthenticated: boolean,
     token: string | null,
     user: {id: string, email: string} | null,
+    diaryListId: number | null,
     login: (username: string, email: string, password: string) => Promise<void>,
     logout: () => void
     register: (username: string, email: string, password: string) => Promise<void>,
@@ -21,12 +22,14 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: AuthProviderProps) {
     const [token, setToken] = useState(() => { return localStorage.getItem("auth_token") })
     const [user, setUser] = useState(null)
+    const [diaryListId, setDiaryListId] = useState(null)
     const isAuthenticated = !!token;
 
     const value = {
         isAuthenticated,
         token,
         user,
+        diaryListId,
         login,
         logout,
         register
@@ -86,12 +89,51 @@ export function AuthProvider({ children }: AuthProviderProps) {
             localStorage.setItem("auth_token", tokenFromServer)
             setToken(tokenFromServer)
             setUser(json.user)
+            try {
+                await createDiary(json.user.id, tokenFromServer)
+            } catch(err){
+                console.log(err)
+            }
             console.log(tokenFromServer)
  
         } catch(err) {
             if (err instanceof Error)
                 console.log(err.message)
         }
+    }
+
+
+    async function createDiary(userId: string, token: string) {
+        console.log(userId)
+        
+        const diary = {
+            name: "Diary",
+            type: 0,
+            isPublic: true
+        };
+
+        try {
+            const response = await fetch(`http://localhost:5102/api/User/${userId}/lists`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(diary),
+                })
+            if (!response.ok) {
+                throw new Error("Not able to create diary");
+            }
+            const json = await response.json()
+            console.log(json)
+            setDiaryListId(json)
+            console.log("hei")
+        } catch(err) {
+            if (err instanceof Error)
+                console.log(err.message)
+        }
+
     }
 
 

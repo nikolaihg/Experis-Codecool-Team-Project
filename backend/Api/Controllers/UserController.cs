@@ -93,19 +93,27 @@ public class UserController : ControllerBase
 
     [HttpPost("{userId}/lists")]
     [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> CreateUserList(string userId, [FromBody] UserList userList)
+    public async Task<IActionResult> CreateUserList(string userId, [FromBody] CreateUserListDto dto)
     {
         var user = await _userRepository.Read(userId);
         if (user == null)
             return NotFound("User not found.");
+        
+        var now = DateTime.UtcNow;
 
-        userList.UserId = userId;
-        userList.User = null;
-        userList.CreatedAt = DateTime.UtcNow;
-        userList.UpdatedAt = DateTime.UtcNow;
+        var userList = new UserList
+        {
+            Name = dto.Name,
+            Type = dto.Type,
+            IsPublic = dto.IsPublic,
+            CreatedAt = now,
+            UpdatedAt = now,
+            UserId = userId,
+            User = null
+        };
 
         var created = await _userListRepository.Create(userList);
-        return Ok(userList.Id);
+        return Ok(created.Id);
     }
 
     [HttpPut("{userId}/lists/{listId:int}")]
