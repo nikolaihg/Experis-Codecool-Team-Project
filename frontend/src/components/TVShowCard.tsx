@@ -1,10 +1,6 @@
 import { useState } from 'react'
 import styles from "./TVShowCard.module.css"
-<<<<<<< HEAD
 import { AddTvShow } from './addTvShow';
-=======
-import { AddTvShow} from './addTvShow';
->>>>>>> 81b0cf8 (added fetching userlists (now it doesn't work because we can't log in and get a token)
 // import './App.css'
 
 type TVShow = {
