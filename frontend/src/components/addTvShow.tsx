@@ -192,7 +192,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 			{error && <p>{error}</p>}
 			{success && <p>{success}</p>}
 
-			<button className={styles.button} type="submit" >
+			<button className={styles.button} type="submit" disabled={!canSubmit}>
 				{isSubmitting ? "Adding..." : "Add to list"}
 			</button>
 		</form>
