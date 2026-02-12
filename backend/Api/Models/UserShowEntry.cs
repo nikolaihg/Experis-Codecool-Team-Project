@@ -15,12 +15,10 @@ public class UserShowEntry
     public int Position { get; set; }
     
     [Required] // FK to userlist, I don't know if this is necessary
-    public int UserListId { get; set; }
+    public Guid UserListId { get; set; }
     public UserList UserList { get; set; } 
 
     [Required] // FK to tvshow, I don't know if this is necessary
-    public int TVShowId { get; set; }
+    public Guid TVShowId { get; set; }
     public TVShow TVShow { get; set; }
 }
-
-
