@@ -15,19 +15,19 @@ function App() {
   return (
     <>
       <Header />
+      <main className="app-content">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFound />}></Route>
 
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />}></Route>
-
-        <Route element={<RequireAuth />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/watchlist" element={<WatchList />} />
-        </Route>
-      </ Routes>
-
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/watchlist" element={<WatchList />} />
+          </Route>
+        </Routes>
+      </main>
       <Footer />
     </>
   )

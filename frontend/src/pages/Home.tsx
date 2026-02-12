@@ -87,7 +87,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <div style={{maxWidth: 350}}>
+      <div style={{maxWidth: 500}}>
         <h2>Recent diary</h2>
         {/* {recentEntries.length === 0 ?
           <p>No diary entries yet. Add your first show!</p>
