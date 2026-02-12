@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
-import { getUserLists } from "../services/api";
+import { getUserLists, addTvShowToList } from "../services/api";
+import { useAuth } from "../auth/AuthContext";
 
 type UserListOption = {
 	id: number;
@@ -39,22 +40,53 @@ const defaultForm: FormState = {
 	rating: "",
 };
 
-export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
+export function AddTvShow({ tvShow }: AddTvShowProps) {
 	const [form, setForm] = useState<FormState>(defaultForm);
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [lists, setLists] = useState<UserListOption[]>([]);
+	const [listsError, setListsError] = useState<string>("");
 
-<<<<<<< HEAD
-	let promise = getUserLists("currentUserId"); // Replace with actual user ID or context
-	let lists = promise.then((data) => data as UserListOption[]).catch((err) => {
-		console.error("Failed to fetch user lists:", err);
-		return [];
-	});
-=======
-	const lists = getUserLists("currentUserId"); // Replace with actual user ID or context
->>>>>>> 81b0cf8b3162878348889485cbb3364e0a67f84b
-	form.tvShowId = tvShow.id;
+	const { user } = useAuth();
+	const userId = user?.id;
+
+	useEffect(() => {
+		setForm((prev) => ({ ...prev, tvShowId: tvShow.id }));
+	}, [tvShow.id]);
+
+	useEffect(() => {
+		let isActive = true;
+
+		const loadLists = async () => {
+			try {
+				if (!userId) {
+					setListsError("Sign in to load your lists.");
+					setLists([]);
+					return;
+				}
+
+				console.log(`Fetching lists for user ${userId}`); // Debug log
+				
+				const data = await getUserLists(userId);
+				if (isActive) {
+					setLists(data);
+					setListsError("");
+				}
+			} catch (err) {
+				console.error("Failed to fetch user lists: ", err);
+				if (isActive) {
+					setListsError("Failed to load lists.");
+					setLists([]);
+				}
+			}
+		};
+
+		loadLists();
+		return () => {
+			isActive = false;
+		};
+	}, [userId]);
 
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
@@ -69,14 +101,18 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 		setError("");
 		setSuccess("");
 
+		console.log("Submitting form with values:", form);
+
 		if (form.userListId === "") {
 			setError("Choose a list before adding.");
+			console.log("Submission error: No list selected");
 			return;
 		}
 
 		const ratingValue = form.rating.trim() === "" ? undefined : Number(form.rating);
 		if (ratingValue !== undefined && (Number.isNaN(ratingValue) || ratingValue < 0 || ratingValue > 5)) {
 			setError("Rating must be a number from 0 to 5.");
+			console.log("Submission error: Invalid rating value");
 			return;
 		}
 
@@ -89,14 +125,14 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 
 		try {
 			setIsSubmitting(true);
-			if (onAdd) {
-				console.log("Calling onAdd with payload:", payload);
-				await onAdd(payload);
+			if(userId){
+				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId, payload.status, payload.rating)
+				setSuccess("Added to list.");
+				setForm(defaultForm);
 			} else {
-				console.log("AddTvShow payload:", payload);
+				console.log("UserId was undefined when adding tvshow")
 			}
-			setSuccess("Added to list.");
-			setForm(defaultForm);
+		
 		} catch (err) {
 			setError("Failed to add TV show. Try again.");
 			console.error(err);
@@ -144,10 +180,11 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 					onChange={handleChange("rating")}
 				/>
 			</div>
+			{listsError && <p>{listsError}</p>}
 			{error && <p>{error}</p>}
 			{success && <p>{success}</p>}
 
-			<button className={styles.button} type="submit" disabled={!canSubmit}>
+			<button className={styles.button} type="submit" >
 				{isSubmitting ? "Adding..." : "Add to list"}
 			</button>
 		</form>

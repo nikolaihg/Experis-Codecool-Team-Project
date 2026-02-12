@@ -19,7 +19,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [token, setToken] = useState(() => { return localStorage.getItem("auth_token") })
+    const [token, setToken] = useState(() => { return localStorage.getItem("token") })
     const [user, setUser] = useState(null)
     const isAuthenticated = !!token;
 
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const json = await response.json()
             const tokenFromServer = json.token
 
-            localStorage.setItem("auth_token", tokenFromServer)
+            localStorage.setItem("token", tokenFromServer)
             setToken(tokenFromServer)
             setUser(json.user)
             console.log(tokenFromServer)
@@ -61,14 +61,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     function logout(){
-        localStorage.removeItem("auth_token")
+        localStorage.removeItem("token")
         setToken(null)
         setUser(null)
     }
 
     async function register(username: string, email: string, password: string) {
         try {
-            const response = await fetch("http://localhost:5102/api/Auth/register", 
+            const response = await fetch("http://localhost:5102/api/auth/register", 
                 {
                     method: 'POST',
                     headers: {
@@ -83,7 +83,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const json = await response.json()
             const tokenFromServer = json.token
 
-            localStorage.setItem("auth_token", tokenFromServer)
+            localStorage.setItem("token", tokenFromServer)
             setToken(tokenFromServer)
             setUser(json.user)
             console.log(tokenFromServer)
