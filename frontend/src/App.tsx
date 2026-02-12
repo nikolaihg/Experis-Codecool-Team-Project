@@ -9,6 +9,7 @@ import WatchList from './pages/WatchList'
 import Login from './pages/login'
 import Register from './pages/register'
 import NotFound from './components/NotFound'
+import { RequireAuth } from './auth/RequireAuth'
 
 function App() {
   return (
@@ -16,12 +17,15 @@ function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/watchlist" element={<WatchList />} />
         <Route path="*" element={<NotFound />}></Route>
+
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/watchlist" element={<WatchList />} />
+        </Route>
       </ Routes>
 
       <Footer />
