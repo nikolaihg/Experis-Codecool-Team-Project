@@ -16,7 +16,10 @@ public class UserRepository : IUserRepository
     
     public async Task<IEnumerable<User>> GetAll()
     {
-        return await _context.Users.AsNoTracking().ToListAsync();
+        return await _context.Users
+        .Include(u => u.UserLists)
+        .AsNoTracking()
+        .ToListAsync();
     }
     
     public async Task<User> Create(User item)

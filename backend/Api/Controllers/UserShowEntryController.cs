@@ -52,9 +52,9 @@ public class UserShowEntryController : ControllerBase
 
         var entry = new UserShowEntry
         {
-            UserListId = Guid.Parse(list.Id),
+            UserListId = list.Id,
             UserList = list,
-            TVShowId = Guid.Parse(tvShow.Id),
+            TVShowId = tvShow.Id,
             TVShow = tvShow,
             Status = status,
             Rating = dto.Rating ?? 0,
