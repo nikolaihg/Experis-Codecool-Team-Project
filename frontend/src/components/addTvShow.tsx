@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-import { useMemo, useState, useEffect } from "react";
-import type { ChangeEvent, FormEvent } from "react";
-import styles from "./TVShowCard.module.css";
-import { getUserLists } from "../services/api";
-import { useAuth } from "../auth/AuthContext"
-=======
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
 import { getUserLists, addTvShowToList } from "../services/api";
 import { useAuth } from "../auth/AuthContext";
->>>>>>> e1c97f7 (Adding tvshows to list should work, however users have no list and are unable to create lists)
 
 type UserListOption = {
 	id: number;
@@ -54,28 +46,6 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 	const [success, setSuccess] = useState<string>("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [lists, setLists] = useState<UserListOption[]>([]);
-<<<<<<< HEAD
-    
-    const { user } = useAuth();
-
-    useEffect(() => {
-        const loadLists = async () => {
-            if (!user?.id) return;
-            try {
-                const data = await getUserLists(user.id);
-                setLists(data);
-            } catch (err) {
-                console.error("Failed to load lists:", err);
-            }
-        };
-        loadLists();
-    }, [user?.id]);
-
-    useEffect(() => {
-        setForm((prev) => ({ ...prev, tvShowId: tvShow.id }));
-    }, [tvShow.id]);
-	form.tvShowId = tvShow.id;
-=======
 	const [listsError, setListsError] = useState<string>("");
 
 	const { user } = useAuth();
@@ -117,7 +87,6 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 			isActive = false;
 		};
 	}, [userId]);
->>>>>>> e1c97f7 (Adding tvshows to list should work, however users have no list and are unable to create lists)
 
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
