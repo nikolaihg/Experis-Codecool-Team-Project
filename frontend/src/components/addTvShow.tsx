@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import { useMemo, useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
 import { getUserLists, addTvShowToList } from "../services/api";
 import { useAuth } from "../auth/AuthContext"
+=======
+import { useEffect, useMemo, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import styles from "./TVShowCard.module.css";
+import { getUserLists, addTvShowToList } from "../services/api";
+import { useAuth } from "../auth/AuthContext";
+>>>>>>> 362ef23 (After rebase, hope it works)
 
 type UserListOption = {
 	id: number;
