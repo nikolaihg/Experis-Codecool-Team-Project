@@ -88,7 +88,11 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		};
 	}, [userId]);
 
-	const lists = getUserLists("currentUserId"); // Replace with actual user ID or context
+	let promise = getUserLists("currentUserId"); // Replace with actual user ID or context
+	let lists = promise.then((data) => data as UserListOption[]).catch((err) => {
+		console.error("Failed to fetch user lists:", err);
+		return [];
+	});
 	form.tvShowId = tvShow.id;
 
 	const canSubmit = useMemo(() => {
