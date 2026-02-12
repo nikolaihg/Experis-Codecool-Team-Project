@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TVShowCard } from "../components/TVShowCard";
+import { useAuth } from "../auth/AuthContext";
 
 
 const Home: React.FC = () => {
+  const { user, token } = useAuth()
+  const [diary, setDiary] = useState(null)
+  const [data, setData] = useState([])
+
   const recentEntries = [{
     id: "1",
     title: "Spider-Man",
@@ -20,16 +25,82 @@ const Home: React.FC = () => {
     genre: "Action"
   }]
 
+  useEffect(() => {
+  // Code for the side effect
+    async function fetchDiary() {
+      if (!user) return
+      console.log("heii")
+          try {
+              const response = await fetch(`http://localhost:5102/api/User/${user.id}/lists`, 
+                  {
+                      method: 'GET',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': `Bearer ${token}`,
+                      }
+                  })
+              if (!response.ok) {
+                  throw new Error("Unable to fetch diary");
+              }
+              console.log("heiii")
+              const json = await response.json()
+              const diaryList = json.find((item: { type: number; }) => item.type === 0);
+              setDiary(diaryList)
+          } catch(err) {
+              if (err instanceof Error)
+                  console.log(err.message)
+          }
+      }
+    fetchDiary()
+    
+  }, [user, token]);
+
+
+  useEffect(() => {
+    async function fetchTvShows() {
+      if (!user) return
+          try {
+              const response = await fetch(`http://localhost:5102/api/tvshow/`, 
+                  {
+                      method: 'GET',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': `Bearer ${token}`,
+                      }
+                  })
+              if (!response.ok) {
+                  throw new Error("Unable to fetch tvshows");
+              }
+              const json = await response.json()
+              setData(json)
+              console.log(json)
+          } catch(err) {
+              if (err instanceof Error)
+                  console.log(err.message)
+          }
+      }
+    fetchTvShows()
+    
+  }, []);
+
+
 
   return (
     <>
       <div>
         <h2>Recent diary</h2>
-        {recentEntries.length === 0 ?
+        {/* {recentEntries.length === 0 ?
           <p>No diary entries yet. Add your first show!</p>
           :
           recentEntries.map(e => <TVShowCard tvShow={e} />)
+        } */}
+        {data.length === 0 ?
+          <p>No diary entries yet. Add your first show!</p>
+          :
+          data.map(e => <TVShowCard tvShow={e} />)
         }
+        
+        {/* {diary ? "Something is here"  : "It is not here"} */}
       </div>
     </>
 
