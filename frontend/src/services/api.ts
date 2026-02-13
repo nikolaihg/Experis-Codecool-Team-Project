@@ -1,5 +1,7 @@
 const API_BASE = "http://localhost:5102";
 
+class UserWatchStatus{}
+
 export async function addTvShowToList(
   userId: string,
   listId: number,
