@@ -53,12 +53,9 @@ public class UserShowEntryController : ControllerBase
         var entry = new UserShowEntry
         {
             UserListId = list.Id,
-            UserList = list,
             TVShowId = tvShow.Id,
-            TVShow = tvShow,
             Status = status,
             Rating = dto.Rating ?? 0,
-            Position = dto.Position ?? 0,
             LoggedAt = DateTime.UtcNow
         };
 
@@ -71,7 +68,6 @@ public class UserShowEntryController : ControllerBase
             created.TVShowId,
             created.Status,
             created.Rating,
-            created.Position,
             created.LoggedAt
         });
     }

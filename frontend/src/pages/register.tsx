@@ -42,8 +42,6 @@ const Register: React.FC = () => {
     if (errors.length > 0) {
       return;
     }
-    console.log("Registering with:", { username, password });
-    // Here you'll call your registration API later
     try {
       await register(username, email, password)
     } catch(err){
