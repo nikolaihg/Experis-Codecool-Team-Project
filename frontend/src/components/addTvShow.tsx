@@ -101,8 +101,6 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		setError("");
 		setSuccess("");
 
-		console.log("Submitting form with values:", form);
-
 		if (form.userListId === "") {
 			setError("Choose a list before adding.");
 			console.log("Submission error: No list selected");

@@ -32,22 +32,43 @@ public class UserListRepository : IUserListRepository
     }
 
     public async Task<bool> Update(int id, UserList item)
+    {        
+        var existing = await _context.UserLists.FirstOrDefaultAsync(x => x.Id == id);
+        if (existing == null)
+            return false;
+
+        existing.Name = item.Name;
+        existing.UpdatedAt = DateTime.Now;
+
+        var affected = await _context.SaveChangesAsync();
+        return affected > 0;
+    }
+
+    public async Task<bool> Add(int id, UserShowEntry entry)
     {
         var existing = await _context.UserLists.FirstOrDefaultAsync(x => x.Id == id);
         
-        existing.Name = item.Name;
-        existing.Type = item.Type;
-        existing.IsPublic = item.IsPublic;
-        existing.CreatedAt = item.CreatedAt;
-        existing.UpdatedAt = DateTime.Now;
+        if(existing == null)
+        {
+            Console.WriteLine("UserList not found");
+            return false;
+        }
         
-        existing.UserId = item.UserId;
-        existing.User =  item.User;
+        Console.WriteLine("TVshowID:" + entry.TVShowId);
+        entry.LoggedAt = DateTime.UtcNow;
+
+         var showExists = _context.TVShows.Any(s => s.Id == entry.TVShowId);
+        if (!showExists)
+        {
+        throw new Exception("TVShowId does not exist in TVShows table.");
+        }
+
+        existing.UserShowEntryList.Add(entry);
+
         
-        existing.UserShowEntryList = item.UserShowEntryList;
         
-        
-        
+       
+
         var affected = await _context.SaveChangesAsync();
         return affected > 0;
     }
@@ -55,6 +76,11 @@ public class UserListRepository : IUserListRepository
     public async Task<bool> Delete(int id)
     {
         var item = await _context.UserLists.FirstOrDefaultAsync(x => x.Id == id);
+        if (item == null)
+        {
+            Console.WriteLine("UserList not found");
+            return false;
+        }
         _context.Remove(item);
         var affected = await _context.SaveChangesAsync();
         return affected > 0;

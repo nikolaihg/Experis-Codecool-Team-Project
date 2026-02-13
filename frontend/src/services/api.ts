@@ -1,10 +1,12 @@
 const API_BASE = "http://localhost:5102";
 
+class UserWatchStatus{}
+
 export async function addTvShowToList(
   userId: string,
   listId: number,
   tvShowId: string,
-  status?: string,
+  status?: UserWatchStatus,
   rating?: number
 ): Promise<{ id: number; userListId: number; tvShowId: string; status: string; rating: number }> {
   const token = localStorage.getItem("token");
@@ -12,18 +14,25 @@ export async function addTvShowToList(
     throw new Error("No auth token found");
   }
 
-  const response = await fetch(`${API_BASE}/api/User/${userId}/lists/${listId}`, {
-    method: "PUT",
+  const response = await fetch(`${API_BASE}/api/User/${userId}/lists/${Number(listId)}`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      tvShowId: parseInt(tvShowId),
-      status,
-      rating,
+      userEntry:
+      {
+        TVShowId: parseInt(tvShowId),
+        Id: userId,
+        UserListId: listId,
+        Status: status,
+        Rating: rating,
+      }
     }),
   });
+
+  console.log(tvShowId)
 
   if (!response.ok) {
     const errorData = await response.text();

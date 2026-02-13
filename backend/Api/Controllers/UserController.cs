@@ -119,22 +119,18 @@ public class UserController : ControllerBase
         return Ok(created.Id);
     }
 
-    [HttpPut("{userId}/lists/{listId:int}")]
+    [HttpPost("{userId}/lists/{listId:int}")]
     [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> UpdateUserList(string userId, int listId, [FromBody] UserList userList)
+    public async Task<IActionResult> UpdateUserList(string userId, int listId, [FromBody] UserShowEntry userEntry)
     {
-        var user = await _userRepository.Read(userId);
-        if (user == null)
-            return NotFound("User not found.");
-
         var existingList = await _userListRepository.Read(listId);
         if (existingList == null || existingList.UserId != userId)
-            return NotFound();
+            return NotFound("List not found or belongs to another user");
 
-        userList.UserId = userId;
-        var success = await _userListRepository.Update(listId, userList);
+Console.WriteLine(userEntry.TVShowId);
+        var success = await _userListRepository.Add(listId, userEntry);
         if (!success)
-            return NotFound();
+            return NotFound("Failed to add TV show to list.");
 
         return NoContent();
     }

@@ -19,6 +19,7 @@ public class UserList
 
     [Required] //FK to user
     public string UserId { get; set; }
+
     public User User { get; set; } 
 
     public ICollection<UserShowEntry> UserShowEntryList { get; set; } = new List<UserShowEntry>();
