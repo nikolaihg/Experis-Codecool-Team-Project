@@ -127,7 +127,6 @@ public class UserController : ControllerBase
         if (existingList == null || existingList.UserId != userId)
             return NotFound("List not found or belongs to another user");
 
-Console.WriteLine(userEntry.TVShowId);
         var success = await _userListRepository.Add(listId, userEntry);
         if (!success)
             return NotFound("Failed to add TV show to list.");
@@ -145,11 +144,12 @@ Console.WriteLine(userEntry.TVShowId);
 
         var existingList = await _userListRepository.Read(listId);
         if (existingList == null || existingList.UserId != userId)
-            return NotFound();
+            return NotFound("List not found or belongs to another user.");
 
         var success = await _userListRepository.Delete(listId);
         if (!success)
-            return NotFound();
+            return NotFound("Failed to delete list.");
+
 
         return NoContent();
     }
