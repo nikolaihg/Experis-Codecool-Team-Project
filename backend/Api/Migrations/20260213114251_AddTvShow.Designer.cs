@@ -3,6 +3,7 @@ using System;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260213114251_AddTvShow")]
+    partial class AddTvShow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,13 +48,19 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<double>("ImdbRating")
-                        .HasColumnType("double precision");
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("PosterUrl")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateOnly>("ReleaseDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("ReleaseYear")
                         .HasColumnType("integer");
@@ -192,10 +201,7 @@ namespace Api.Migrations
                     b.Property<DateTime>("LoggedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Position")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Rating")
+                    b.Property<int>("Rating")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
@@ -361,8 +367,6 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.UserShowEntry", b =>
                 {
-                    b.HasOne("Api.Models.TVShow", "TVShow")
-                        .WithMany();
                     b.HasOne("Api.Models.TVShow", null)
                         .WithMany("UserShowEntryList")
                         .HasForeignKey("TVShowId")
@@ -425,6 +429,11 @@ namespace Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Api.Models.TVShow", b =>
+                {
+                    b.Navigation("UserShowEntryList");
                 });
 
             modelBuilder.Entity("Api.Models.User", b =>
