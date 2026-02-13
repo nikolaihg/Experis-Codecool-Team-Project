@@ -192,14 +192,7 @@ namespace Api.Migrations
                     b.Property<DateTime>("LoggedAt")
                         .HasColumnType("timestamp with time zone");
 
-<<<<<<< HEAD
-                    b.Property<int>("Position")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Rating")
-=======
                     b.Property<int>("Rating")
->>>>>>> e4b7b32 (Believe everything works, but cannot check since the movies in the database doesn't match the site. Will rebase to try and fix this)
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
@@ -365,11 +358,6 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.UserShowEntry", b =>
                 {
-<<<<<<< HEAD
-                    b.HasOne("Api.Models.TVShow", "TVShow")
-                        .WithMany();
-=======
->>>>>>> e4b7b32 (Believe everything works, but cannot check since the movies in the database doesn't match the site. Will rebase to try and fix this)
                     b.HasOne("Api.Models.TVShow", null)
                         .WithMany("UserShowEntryList")
                         .HasForeignKey("TVShowId")
