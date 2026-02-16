@@ -16,7 +16,7 @@ type TVShowOption = {
 
 export type AddTvShowPayload = {
 	userListId: number;
-	tvShowId: string;
+	tvShowId: number;
 	status?: string;
 	rating?: number;
 };
@@ -116,7 +116,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 
 		const payload: AddTvShowPayload = {
 			userListId: Number(form.userListId),
-			tvShowId: form.tvShowId,
+			tvShowId: Number(form.tvShowId),
 			status: form.status || undefined,
 			rating: ratingValue,
 		};
@@ -124,7 +124,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		try {
 			setIsSubmitting(true);
 			if(userId){
-				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId, payload.status, payload.rating)
+				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId.toString(), payload.status, payload.rating)
 				setSuccess("Added to list.");
 				setForm(defaultForm);
 			} else {
@@ -158,11 +158,11 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 			<div>
 				<label htmlFor="status">Status</label>
 				<select id="status" value={form.status} onChange={handleChange("status")}>
-					<option value="Planning">Planning</option>
-					<option value="Watching">Watching</option>
-					<option value="Completed">Completed</option>
-					<option value="OnHold">On Hold</option>
-					<option value="Dropped">Dropped</option>
+					<option value="0">Planning</option>
+					<option value="1">Watching</option>
+					<option value="2">Completed</option>
+					<option value="3">On Hold</option>
+					<option value="4">Dropped</option>
 				</select>
 			</div>
 

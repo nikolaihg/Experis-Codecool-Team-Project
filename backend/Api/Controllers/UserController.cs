@@ -127,6 +127,8 @@ public class UserController : ControllerBase
         if (existingList == null || existingList.UserId != userId)
             return NotFound("List not found or belongs to another user");
 
+        Console.WriteLine($"Received UserShowEntry: {userEntry.TVShowId}");
+
         var success = await _userListRepository.Add(listId, userEntry);
         if (!success)
             return NotFound("Failed to add TV show to list.");

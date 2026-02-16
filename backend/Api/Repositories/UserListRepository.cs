@@ -54,10 +54,10 @@ public class UserListRepository : IUserListRepository
             return false;
         }
         
-        Console.WriteLine("UserList found:");
         Console.WriteLine("TVshowID:" + entry.TVShowId);
         entry.LoggedAt = DateTime.UtcNow;
 
+        Console.WriteLine($"Checking if TVShow with ID {entry.TVShowId} exists in TVShows table"); // Debug log
         var showExists = _context.TVShows.Any(s => s.Id == entry.TVShowId);
         if (!showExists)
         {
@@ -65,10 +65,6 @@ public class UserListRepository : IUserListRepository
         }
 
         existing.UserShowEntryList.Add(entry);
-
-        
-        
-       
 
         var affected = await _context.SaveChangesAsync();
         return affected > 0;
