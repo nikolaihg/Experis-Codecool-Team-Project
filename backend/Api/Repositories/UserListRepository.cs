@@ -77,7 +77,6 @@ public class UserListRepository : IUserListRepository
             return false;
         }
         
-        Console.WriteLine("UserList found:");
         Console.WriteLine("TVshowID:" + entry.TVShowId);
         entry.LoggedAt = DateTime.UtcNow;
 
