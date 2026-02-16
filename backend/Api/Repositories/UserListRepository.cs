@@ -54,10 +54,11 @@ public class UserListRepository : IUserListRepository
             return false;
         }
         
+        Console.WriteLine("UserList found:");
         Console.WriteLine("TVshowID:" + entry.TVShowId);
         entry.LoggedAt = DateTime.UtcNow;
 
-         var showExists = _context.TVShows.Any(s => s.Id == entry.TVShowId);
+        var showExists = _context.TVShows.Any(s => s.Id == entry.TVShowId);
         if (!showExists)
         {
         throw new Exception("TVShowId does not exist in TVShows table.");
