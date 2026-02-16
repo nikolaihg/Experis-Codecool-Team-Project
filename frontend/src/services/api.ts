@@ -1,12 +1,11 @@
 const API_BASE = "http://localhost:5102";
 
-class UserWatchStatus{}
 
 export async function addTvShowToList(
   userId: string,
   listId: number,
   tvShowId: string,
-  status?: UserWatchStatus,
+  status?: number,
   rating?: number
 ): Promise<{ id: number; userListId: number; tvShowId: string; status: string; rating: number }> {
   const token = localStorage.getItem("token");
@@ -21,22 +20,27 @@ export async function addTvShowToList(
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      userEntry:
-      {
-        TVShowId: parseInt(tvShowId),
-        Id: userId,
-        UserListId: listId,
-        Status: status,
-        Rating: rating,
-      }
+      tvShowId: Number(tvShowId),
+      userListId: Number(listId),
+      status: status ? Number(status) : 0,
+      rating: rating ? Number(rating) : 0
     }),
   });
 
-  console.log(tvShowId)
+  console.log("Sending: " + JSON.stringify({
+    tvShowId: Number(tvShowId),
+    userListId: Number(listId),
+    status: status ? Number(status) : 0,
+    rating: rating ? Number(rating) : 0
+  }));
 
   if (!response.ok) {
     const errorData = await response.text();
     throw new Error(`Failed to add TV show: ${response.status} ${errorData}`);
+  }
+
+  if (response.status === 204) {
+    return { id: 0, userListId: listId, tvShowId: tvShowId, status: "success", rating: 0 };
   }
 
   return response.json();
