@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260212140000_FixUserShowEntryFks")]
-    partial class FixUserShowEntryFks
+    [Migration("20260216120135_RebaseMigration")]
+    partial class RebaseMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -201,9 +201,6 @@ namespace Api.Migrations
                     b.Property<DateTime>("LoggedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Position")
-                        .HasColumnType("integer");
-
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
@@ -370,21 +367,17 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.UserShowEntry", b =>
                 {
-                    b.HasOne("Api.Models.TVShow", "TVShow")
+                    b.HasOne("Api.Models.TVShow", null)
                         .WithMany("UserShowEntryList")
                         .HasForeignKey("TVShowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Models.UserList", "UserList")
+                    b.HasOne("Api.Models.UserList", null)
                         .WithMany("UserShowEntryList")
                         .HasForeignKey("UserListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("TVShow");
-
-                    b.Navigation("UserList");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
