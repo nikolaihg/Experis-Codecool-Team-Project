@@ -53,6 +53,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const tokenFromServer = json.token
 
             localStorage.setItem("token", tokenFromServer)
+            localStorage.setItem("token", tokenFromServer)
             setToken(tokenFromServer)
             setUser(json.user)
             console.log(tokenFromServer)
@@ -64,6 +65,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     function logout(){
+        localStorage.removeItem("token")
         localStorage.removeItem("token")
         setToken(null)
         setUser(null)
@@ -86,6 +88,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const json = await response.json()
             const tokenFromServer = json.token
 
+            localStorage.setItem("token", tokenFromServer)
             localStorage.setItem("token", tokenFromServer)
             setToken(tokenFromServer)
             setUser(json.user)
