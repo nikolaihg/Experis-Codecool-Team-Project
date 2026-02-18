@@ -46,3 +46,8 @@
     box-sizing: border-box;
 }
 
+.page-container {
+    margin: 0 auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}

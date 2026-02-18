@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const Login: React.FC = () => {
@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     // Here you'll call your login API later
     try {
       await login(username, email, password)
-    } catch(err){
+    } catch (err) {
       console.log(err)
     }
     navigate("/")
@@ -25,7 +25,7 @@ const Login: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-        <h1>Login</h1>
+      <h1>Login</h1>
       <div>
         <label htmlFor="username">Username </label>
         <input
@@ -46,7 +46,6 @@ const Login: React.FC = () => {
           autoComplete="email"
         />
       </div>
-
       <div>
         <label htmlFor="password">Password </label>
         <input
@@ -57,7 +56,6 @@ const Login: React.FC = () => {
           autoComplete="current-password"
         />
       </div>
-
       <button type="submit">Log in</button>
       <button type="button" onClick={() => window.location.href = "/register"}>
         Register
