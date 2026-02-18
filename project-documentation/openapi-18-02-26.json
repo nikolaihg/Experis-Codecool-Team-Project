@@ -713,21 +713,14 @@
           "status": {
             "$ref": "#/components/schemas/TVShowStatus"
           },
-          "isArchived": {
-            "type": "boolean"
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "releaseDate": {
-            "type": "string",
-            "format": "date"
-          },
           "genre": {
             "type": "string"
           },
-          "rating": {
+          "imdbRating": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
             "type": [
               "number",
@@ -974,6 +967,8 @@
             "$ref": "#/components/schemas/UserWatchStatus"
           },
           "rating": {
+            "maximum": 6,
+            "minimum": 1,
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
               "null",
