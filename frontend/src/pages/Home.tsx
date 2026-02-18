@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { TVShowCard } from "../components/TVShowCard";
 import { useAuth } from "../auth/AuthContext";
+import { AddTvShow } from '../components/addTvShow';
+import styles from "../components/TVShowCard.module.css"
 import TvShowSearch from "../components/TvShowSearch";
 import type { TVShow } from "../types";
 
@@ -85,7 +87,7 @@ const Home: React.FC = () => {
     
   }, [token]);
 
-
+  const [adding, setAdding] = useState(false)
 
   return (
     <div className="page-container" style={{maxWidth: 500}}>
@@ -100,6 +102,11 @@ const Home: React.FC = () => {
           :
           data.map(e => <TVShowCard tvShow={e} />)
         }
+
+        <button className={styles.button} onClick={() => setAdding(!adding)}>
+          <span className={styles.buttonText}>+</span>
+        </button>
+        {adding ? <AddTvShow /> : null}
         
         {/* {diary ? "Something is here"  : "It is not here"} */}
         <TvShowSearch onSelect={setSelected} />

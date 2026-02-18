@@ -15,11 +15,11 @@ public class UserShowEntry
 
     public int Position { get; set; }
     
-    [Required]
+    [Required] // FK to userlist
     public int UserListId { get; set; }
     public UserList UserList { get; set; } 
 
-    [Required]
+    [Required] // FK to tvshow
     public int TVShowId { get; set; }
     public TVShow TVShow { get; set; }
 }

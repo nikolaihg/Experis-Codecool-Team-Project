@@ -1,8 +1,8 @@
-import { useMemo, useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
-import { getUserLists } from "../services/api";
-import { useAuth } from "../auth/AuthContext"
+import { getUserLists, addTvShowToList } from "../services/api";
+import { useAuth } from "../auth/AuthContext";
 
 type UserListOption = {
 	id: number;
@@ -16,7 +16,7 @@ type TVShowOption = {
 
 export type AddTvShowPayload = {
 	userListId: number;
-	tvShowId: string;
+	tvShowId: number;
 	status?: string;
 	rating?: number;
 };
@@ -40,32 +40,53 @@ const defaultForm: FormState = {
 	rating: "",
 };
 
-export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
+export function AddTvShow({ tvShow }: AddTvShowProps) {
 	const [form, setForm] = useState<FormState>(defaultForm);
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [lists, setLists] = useState<UserListOption[]>([]);
-    
-    const { user } = useAuth();
+	const [listsError, setListsError] = useState<string>("");
 
-    useEffect(() => {
-        const loadLists = async () => {
-            if (!user?.id) return;
-            try {
-                const data = await getUserLists(user.id);
-                setLists(data);
-            } catch (err) {
-                console.error("Failed to load lists:", err);
-            }
-        };
-        loadLists();
-    }, [user?.id]);
+	const { user } = useAuth();
+	const userId = user?.id;
 
-    useEffect(() => {
-        setForm((prev) => ({ ...prev, tvShowId: tvShow.id }));
-    }, [tvShow.id]);
-	form.tvShowId = tvShow.id;
+	useEffect(() => {
+		setForm((prev) => ({ ...prev, tvShowId: tvShow.id }));
+	}, [tvShow.id]);
+
+	useEffect(() => {
+		let isActive = true;
+
+		const loadLists = async () => {
+			try {
+				if (!userId) {
+					setListsError("Sign in to load your lists.");
+					setLists([]);
+					return;
+				}
+
+				console.log(`Fetching lists for user ${userId}`); // Debug log
+				
+				const data = await getUserLists(userId);
+				if (isActive) {
+					setLists(data);
+					setListsError("");
+				}
+			} catch (err) {
+				console.error("Failed to fetch user lists: ", err);
+				if (isActive) {
+					setListsError("Failed to load lists.");
+					setLists([]);
+				}
+			}
+		};
+
+		loadLists();
+		return () => {
+			isActive = false;
+		};
+	}, [userId]);
 
 	const canSubmit = useMemo(() => {
 		return form.userListId !== "" && form.tvShowId !== "" && !isSubmitting;
@@ -82,32 +103,34 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 
 		if (form.userListId === "") {
 			setError("Choose a list before adding.");
+			console.log("Submission error: No list selected");
 			return;
 		}
 
 		const ratingValue = form.rating.trim() === "" ? undefined : Number(form.rating);
 		if (ratingValue !== undefined && (Number.isNaN(ratingValue) || ratingValue < 0 || ratingValue > 5)) {
 			setError("Rating must be a number from 0 to 5.");
+			console.log("Submission error: Invalid rating value");
 			return;
 		}
 
 		const payload: AddTvShowPayload = {
 			userListId: Number(form.userListId),
-			tvShowId: form.tvShowId,
+			tvShowId: Number(form.tvShowId),
 			status: form.status || undefined,
 			rating: ratingValue,
 		};
 
 		try {
 			setIsSubmitting(true);
-			if (onAdd) {
-				console.log("Calling onAdd with payload:", payload);
-				await onAdd(payload);
+			if(userId){
+				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId.toString(), payload.status, payload.rating)
+				setSuccess("Added to list.");
+				setForm(defaultForm);
 			} else {
-				console.log("AddTvShow payload:", payload);
+				console.log("UserId was undefined when adding tvshow")
 			}
-			setSuccess("Added to list.");
-			setForm(defaultForm);
+		
 		} catch (err) {
 			setError("Failed to add TV show. Try again.");
 			console.error(err);
@@ -135,11 +158,11 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 			<div>
 				<label htmlFor="status">Status</label>
 				<select id="status" value={form.status} onChange={handleChange("status")}>
-					<option value="Planning">Planning</option>
-					<option value="Watching">Watching</option>
-					<option value="Completed">Completed</option>
-					<option value="OnHold">On Hold</option>
-					<option value="Dropped">Dropped</option>
+					<option value="0">Planning</option>
+					<option value="1">Watching</option>
+					<option value="2">Completed</option>
+					<option value="3">On Hold</option>
+					<option value="4">Dropped</option>
 				</select>
 			</div>
 
@@ -155,6 +178,7 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 					onChange={handleChange("rating")}
 				/>
 			</div>
+			{listsError && <p>{listsError}</p>}
 			{error && <p>{error}</p>}
 			{success && <p>{success}</p>}
 

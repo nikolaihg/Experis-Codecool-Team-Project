@@ -1,4 +1,4 @@
-const API_BASE = "https://localhost:5102";
+const API_BASE = "http://localhost:5102";
 
 export async function addTvShowToList(
   userId: string,
@@ -12,8 +12,8 @@ export async function addTvShowToList(
     throw new Error("No auth token found");
   }
 
-  const response = await fetch(`${API_BASE}/users/${userId}/lists/${listId}/entries`, {
-    method: "POST",
+  const response = await fetch(`${API_BASE}/api/User/${userId}/lists/${listId}`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -39,7 +39,8 @@ export async function getUserLists(userId: string): Promise<Array<{ id: number; 
     throw new Error("No auth token found");
   }
 
-  const response = await fetch(`${API_BASE}/users/${userId}/lists`, {
+  const response = await fetch(`${API_BASE}/api/User/${userId}/lists`, {
+    method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
     },
