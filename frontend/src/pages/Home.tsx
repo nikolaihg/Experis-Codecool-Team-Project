@@ -106,8 +106,9 @@ const Home: React.FC = () => {
         <button className={styles.button} onClick={() => setAdding(!adding)}>
           <span className={styles.buttonText}>+</span>
         </button>
-        {adding ? <AddTvShow tvShow={selected} /> : null}
         <TvShowSearch onSelect={setSelected} />
+        {adding ? <AddTvShow tvShow={selected} /> : null}
+        
       </div>
   )
 };
