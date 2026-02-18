@@ -64,6 +64,17 @@ public class TVShowController : ControllerBase
             return NotFound();
         return Ok();
     }
-    
+
+    [HttpGet("search")]
+    [Authorize]
+    public async Task<IActionResult> Search([FromQuery] string q)
+    {
+        if (string.IsNullOrWhiteSpace(q) || q.Length < 2)
+            return Ok(Array.Empty<object>());
+
+        var shows = await _tvShowRepository.Search(q);
+
+        return Ok(shows);
+    } 
     
 }
