@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from "./TVShowCard.module.css"
-<<<<<<< HEAD
 import { AddTvShow } from './addTvShow';
-=======
-import { AddTvShow} from './addTvShow';
->>>>>>> 81b0cf8 (added fetching userlists (now it doesn't work because we can't log in and get a token)
 // import './App.css'
 
 type TVShow = {
@@ -37,7 +33,7 @@ export function TVShowCard({ tvShow }: TVShowCardProps ) {
                 <p>{tvShow.genre}</p>
             </div>
             <button className={styles.button} onClick={() => setAdding(!adding)}> + </button>
-            {adding ? <AddTvShow tvShow={tvShow} onAdd={(payload) => console.log("Adding TV show with payload:", payload)} /> : null}
+            {adding ? <AddTvShow tvShow={tvShow}/> : null}
         </div>
     </>
   )
