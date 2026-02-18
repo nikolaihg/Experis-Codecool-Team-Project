@@ -19,17 +19,24 @@ Development is done with in an aglie style with 4 planned sprints and a linked g
 - **Tooling**:: Node.js. npm/pnpm. .NET SDK 10
 
 ## Environment Setup
-AS OF NOW we have to have two .env files one for docker and one for .NET SDK
-so first:
-1. cd to project root
-2. `cp .env.example .env`
-3. Edit the variables
-4. cd backend/API
-5. `cp .env.example .env`
-6. Edit the variables
+### Backend
+Backend uses `dotnet user-secrets` so if you have cloned this project run: 
+```bash
+# 1. init
+cd backend/Api
+dotnet user-secrets init
+# 2. Set postgres connection string
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=tvshowlogger;Username=YOURUSERNAME;Password=YOURPASSWORD"
+# 4. Set JWT signingKey
+dotnet user-secrets set "Jwt:SigningKey" "SUPERLONGSECRETKEYDONTSHAREMIN32CHARS"
+# 5. Change issuer and audience in ./backend/Api/appsettings.Docker.json if you want to change these
+```
 
-Note: In the "main" .env the postgres host has to be the same as the container name. But in backend folder it needs to be localhost.
+### Frontend
 
+### Docker Compose
+Docker compose uses a enviroment file called `.env.docker`located in root.  
+So start by `cp .env.docker.example .env.docker` and fill out your secrets if you want to use docker compose.  
 
 Create a `.env` file in the project root with the following variables:
 ```
