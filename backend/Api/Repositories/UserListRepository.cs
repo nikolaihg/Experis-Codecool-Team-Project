@@ -28,7 +28,30 @@ public class UserListRepository : IUserListRepository
 
     public async Task<UserList?> Read(int id)
     {
-        return await _context.UserLists.FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.UserLists
+            .Include(l => l.UserShowEntryList)
+                .ThenInclude(e => e.TVShow)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task<IEnumerable<UserList>> GetByUserId(string userId)
+    {
+        return await _context.UserLists
+            .Where(l => l.UserId == userId)
+            .Include(l => l.UserShowEntryList)
+                .ThenInclude(e => e.TVShow)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<UserList>> GetAllPublic()
+    {
+        return await _context.UserLists
+            .Where(l => l.IsPublic)
+            .Include(l => l.UserShowEntryList)
+                .ThenInclude(e => e.TVShow)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<bool> Update(int id, UserList item)

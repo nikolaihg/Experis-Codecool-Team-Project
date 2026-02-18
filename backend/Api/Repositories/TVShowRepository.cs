@@ -36,9 +36,8 @@ public class TVShowRepository : ITVShowRepository
         
         existing.Title = item.Title;
         existing.Description = item.Description;
-        existing.ReleaseDate = item.ReleaseDate;
         existing.Genre = item.Genre;
-        existing.Rating = item.Rating;
+        existing.ImdbRating = item.ImdbRating;
         existing.AmountOfEpisodes = item.AmountOfEpisodes;
         existing.TotalUsersWatched = item.TotalUsersWatched;
         
