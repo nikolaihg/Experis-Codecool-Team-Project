@@ -106,7 +106,7 @@ const Home: React.FC = () => {
         <button className={styles.button} onClick={() => setAdding(!adding)}>
           <span className={styles.buttonText}>+</span>
         </button>
-        {adding ? <AddTvShow /> : null}
+        {adding ? <AddTvShow }/> : null}
         
         {/* {diary ? "Something is here"  : "It is not here"} */}
         <TvShowSearch onSelect={setSelected} />

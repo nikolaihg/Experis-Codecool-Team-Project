@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 import { useMemo, useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./TVShowCard.module.css";
 import { getUserLists, addTvShowToList } from "../services/api";
 import { useAuth } from "../auth/AuthContext"
-=======
-import { useEffect, useMemo, useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
-import styles from "./TVShowCard.module.css";
-import { getUserLists, addTvShowToList } from "../services/api";
-import { useAuth } from "../auth/AuthContext";
->>>>>>> 362ef23 (After rebase, hope it works)
 
 type UserListOption = {
 	id: number;
@@ -109,6 +101,8 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		setError("");
 		setSuccess("");
 
+		console.log("Submitting form with values:", form);
+
 		if (form.userListId === "") {
 			setError("Choose a list before adding.");
 			console.log("Submission error: No list selected");
@@ -132,7 +126,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		try {
 			setIsSubmitting(true);
 			if(userId){
-				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId.toString(), payload.status, payload.rating)
+				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId.toString(), Number(payload.status), payload.rating);
 				setSuccess("Added to list.");
 				setForm(defaultForm);
 			} else {
@@ -190,7 +184,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 			{error && <p>{error}</p>}
 			{success && <p>{success}</p>}
 
-			<button className={styles.button} type="submit" disabled={!canSubmit}>
+			<button className={styles.button} type="submit" >
 				{isSubmitting ? "Adding..." : "Add to list"}
 			</button>
 		</form>
