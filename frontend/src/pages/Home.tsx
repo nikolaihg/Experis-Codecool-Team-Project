@@ -59,7 +59,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     async function fetchTvShows() {
-      if (!user) return
+      if (!token) return
           try {
               const response = await fetch(`/api/tvshow/`, 
                   {
@@ -74,6 +74,7 @@ const Home: React.FC = () => {
               }
               const json = await response.json()
               setData(json)
+              console.log("hei")
               console.log(json)
           } catch(err) {
               if (err instanceof Error)
@@ -82,7 +83,7 @@ const Home: React.FC = () => {
       }
     fetchTvShows()
     
-  }, []);
+  }, [token]);
 
 
 
