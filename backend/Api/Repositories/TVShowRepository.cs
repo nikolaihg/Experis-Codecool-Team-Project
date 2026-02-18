@@ -53,5 +53,13 @@ public class TVShowRepository : ITVShowRepository
         var affected = await _context.SaveChangesAsync();
         return affected > 0;
     }
-    
+
+    public async Task<IEnumerable<TVShow>> Search(string q)
+    {
+        return await _context.TVShows
+            .Where(s => EF.Functions.ILike(s.Title, $"%{q}%"))
+            .OrderBy(s => s.Title)
+            .Take(5)
+            .ToListAsync();
+    }
 }

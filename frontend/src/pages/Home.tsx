@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { TVShowCard } from "../components/TVShowCard";
 import { useAuth } from "../auth/AuthContext";
+import TvShowSearch from "../components/TvShowSearch";
+import type { TVShow } from "../types";
 
 
 const Home: React.FC = () => {
   const { user, token } = useAuth()
   const [diary, setDiary] = useState(null)
   const [data, setData] = useState([])
+  const [selected, setSelected] = useState<TVShow | null>(null);
 
   const recentEntries = [{
     id: "1",
@@ -29,9 +32,8 @@ const Home: React.FC = () => {
   // Code for the side effect
     async function fetchDiary() {
       if (!user) return
-      console.log("heii")
           try {
-              const response = await fetch(`http://localhost:5102/api/User/${user.id}/lists`, 
+              const response = await fetch(`/api/User/${user.id}/lists`, 
                   {
                       method: 'GET',
                       headers: {
@@ -42,7 +44,6 @@ const Home: React.FC = () => {
               if (!response.ok) {
                   throw new Error("Unable to fetch diary");
               }
-              console.log("heiii")
               const json = await response.json()
               const diaryList = json.find((item: { type: number; }) => item.type === 0);
               setDiary(diaryList)
@@ -60,7 +61,7 @@ const Home: React.FC = () => {
     async function fetchTvShows() {
       if (!user) return
           try {
-              const response = await fetch(`http://localhost:5102/api/tvshow/`, 
+              const response = await fetch(`/api/tvshow/`, 
                   {
                       method: 'GET',
                       headers: {
@@ -101,6 +102,7 @@ const Home: React.FC = () => {
         }
         
         {/* {diary ? "Something is here"  : "It is not here"} */}
+        <TvShowSearch onSelect={setSelected} />
       </div>
     </>
 
