@@ -45,17 +45,7 @@ public class AuthController : ControllerBase
         var roles = await _userManager.GetRolesAsync(user);
         var token = _jwtService.GenerateToken(user, roles);
 
-        return Ok(new
-        {
-            token,
-            expiresIn = _jwtOptions.ExpiresInMinutes,
-            user = new
-            {
-                user.Id,
-                user.Email,
-                user.UserName
-            }
-        });
+        return Ok(new AuthResponseDto(token, _jwtOptions.ExpiresInMinutes));
     }
 
     [HttpPost("login")]
@@ -72,12 +62,7 @@ public class AuthController : ControllerBase
         var roles = await _userManager.GetRolesAsync(user);
         var token = _jwtService.GenerateToken(user, roles);
         
-        return Ok(new
-        {
-            token,
-            expiresIn =_jwtOptions.ExpiresInMinutes,
-            user = new { user.Id, user.Email }
-        });
+        return Ok(new AuthResponseDto(token, _jwtOptions.ExpiresInMinutes));
     }
     
     [Authorize(Roles = "Admin")]

@@ -19,13 +19,10 @@ public class TVShow
     public string PosterUrl { get; set; }
 
     public TVShowStatus Status { get; set; }
-    public Boolean IsArchived { get; set; }
     public DateTime CreatedAt { get; set; }
 
-    public ICollection<UserShowEntry> UserShowEntryList { get; set; } = new List<UserShowEntry>();
-    public DateOnly ReleaseDate { get; set; }
     public string Genre { get; set; }
-    public double Rating { get; set; }
+    public double ImdbRating { get; set; }
     public int AmountOfEpisodes { get; set; }
     public int TotalUsersWatched { get; set; }
 }

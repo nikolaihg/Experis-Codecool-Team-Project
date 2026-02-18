@@ -12,12 +12,10 @@ namespace Api.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-    private readonly IUserListRepository _userListRepository;
 
-    public UserController(IUserRepository userRepository, IUserListRepository userListRepository)
+    public UserController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _userListRepository = userListRepository;
     }
     
     [HttpGet]
@@ -73,82 +71,6 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Delete(string id)
     {
         var success = await _userRepository.Delete(id);
-        if (!success)
-            return NotFound();
-
-        return NoContent();
-    }
-
-    [HttpGet("{userId}/lists")]
-    [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> GetUserLists(string userId)
-    {
-        var user = await _userRepository.Read(userId);
-        if (user == null)
-            return NotFound("User not found.");
-
-        var lists = user.UserLists;
-        return Ok(lists);
-    }
-
-    [HttpPost("{userId}/lists")]
-    [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> CreateUserList(string userId, [FromBody] CreateUserListDto dto)
-    {
-        var user = await _userRepository.Read(userId);
-        if (user == null)
-            return NotFound("User not found.");
-        
-        var now = DateTime.UtcNow;
-
-        var userList = new UserList
-        {
-            Name = dto.Name,
-            Type = dto.Type,
-            IsPublic = dto.IsPublic,
-            CreatedAt = now,
-            UpdatedAt = now,
-            UserId = userId,
-            User = null
-        };
-
-        var created = await _userListRepository.Create(userList);
-        return Ok(created.Id);
-    }
-
-    [HttpPut("{userId}/lists/{listId:int}")]
-    [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> UpdateUserList(string userId, int listId, [FromBody] UserList userList)
-    {
-        var user = await _userRepository.Read(userId);
-        if (user == null)
-            return NotFound("User not found.");
-
-        var existingList = await _userListRepository.Read(listId);
-        if (existingList == null || existingList.UserId != userId)
-            return NotFound();
-
-        userList.UserId = userId;
-        var success = await _userListRepository.Update(listId, userList);
-        if (!success)
-            return NotFound();
-
-        return NoContent();
-    }
-
-    [HttpDelete("{userId}/lists/{listId:int}")]
-    [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> DeleteUserList(string userId, int listId)
-    {
-        var user = await _userRepository.Read(userId);
-        if (user == null)
-            return NotFound("User not found.");
-
-        var existingList = await _userListRepository.Read(listId);
-        if (existingList == null || existingList.UserId != userId)
-            return NotFound();
-
-        var success = await _userListRepository.Delete(listId);
         if (!success)
             return NotFound();
 

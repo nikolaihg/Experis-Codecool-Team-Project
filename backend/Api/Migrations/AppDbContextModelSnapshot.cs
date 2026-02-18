@@ -45,19 +45,13 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("boolean");
+                    b.Property<double>("ImdbRating")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("PosterUrl")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<double>("Rating")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateOnly>("ReleaseDate")
-                        .HasColumnType("date");
 
                     b.Property<int>("ReleaseYear")
                         .HasColumnType("integer");
@@ -201,29 +195,23 @@ namespace Api.Migrations
                     b.Property<int>("Position")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Rating")
+                    b.Property<int?>("Rating")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("TVShowId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("TVShowId1")
+                    b.Property<int>("TVShowId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("UserListId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("UserListId1")
+                    b.Property<int>("UserListId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TVShowId1");
+                    b.HasIndex("TVShowId");
 
-                    b.HasIndex("UserListId1");
+                    b.HasIndex("UserListId");
 
                     b.ToTable("UserShowEntries");
                 });
@@ -374,14 +362,14 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Models.UserShowEntry", b =>
                 {
                     b.HasOne("Api.Models.TVShow", "TVShow")
-                        .WithMany("UserShowEntryList")
-                        .HasForeignKey("TVShowId1")
+                        .WithMany()
+                        .HasForeignKey("TVShowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Api.Models.UserList", "UserList")
                         .WithMany("UserShowEntryList")
-                        .HasForeignKey("UserListId1")
+                        .HasForeignKey("UserListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -439,11 +427,6 @@ namespace Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Api.Models.TVShow", b =>
-                {
-                    b.Navigation("UserShowEntryList");
                 });
 
             modelBuilder.Entity("Api.Models.User", b =>
