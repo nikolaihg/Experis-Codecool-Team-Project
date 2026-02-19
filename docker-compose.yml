@@ -19,7 +19,7 @@
     container_name: tvshowlogger-postgres
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-tvshowlogger}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-tvshowlogger}"]
       interval: 5s
       timeout: 5s
       retries: 5
