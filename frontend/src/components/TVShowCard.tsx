@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react'
 import styles from "./TVShowCard.module.css"
+import type { TVShow } from '../types';
 // import './App.css'
 
-type TVShow = {
-    id: string,
-    title: string,
-    posterUrl: string,
-    rating: number,
-    releaseYear: number,
-    genre: string
-}
 
 type TVShowCardProps = {
     tvShow: TVShow;
