@@ -4,34 +4,66 @@
       context: .
       dockerfile: ./backend/Dockerfile
     container_name: tvshowlogger-api
+    networks:
+      - web
     ports:
       - "8080:8080"
     env_file: .env.docker
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=solarwatch;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=tvshowlogger;Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
     depends_on:
       postgres:
         condition: service_healthy
   postgres:
-    image: postgres:latest
+    image: postgres:18
     container_name: tvshowlogger-postgres
+    networks:
+      - web
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-tvshowlogger}"]
       interval: 5s
       timeout: 5s
       retries: 5
     env_file: .env.docker
-    # environment:
-    #   POSTGRES_DB: ${DB_NAME:-tvshowlogger}
-    #   POSTGRES_USER: ${DB_USER}
-    #   POSTGRES_PASSWORD: ${DB_PASSWORD}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-tvshowlogger}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8080}
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - web
+
+  nginx:
+    image: nginx:alpine
+    ports: 
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - frontend
+      - postgres
+    restart: unless-stopped
+    networks:
+      - web
+
+networks:
+  web:
 
 volumes:
   postgres_data:

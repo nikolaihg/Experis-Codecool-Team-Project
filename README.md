@@ -2,20 +2,21 @@
 Goal: Develop a fullstack data-driven application with .NET, React, PostgreSQL  
 Development is done with in an aglie style with 4 planned sprints and a linked github project page for this specific repo: [Experis-Codecool-team-project](https://github.com/users/nikolaihg/projects/2)
 
-# Getting Started
-
-## Prerequisites
+## Getting Started
+### Prerequisites
 - .NET SDK 10
 - Node.js & npm/pnpm
 - Docker & Docker Compose (for containerized development)
 - PostgreSQL client (optional, for direct database access)
 
-# Tech Summary
+### Tech Summary
 - **Frontend**: React (Vite)
 - **Backend**: ASP.NET Core (.NET 10) REST API
 - **Database**: PostgreSQL (Entiy Framework Core)
+- **Reverse Proxy**: NGINX
 - **AUTH**: JWT
 - **Monorepo structure**: shared root folder with .env file
+- **Docker**: Everything is dockerized and compose for easy running
 - **Tooling**:: Node.js. npm/pnpm. .NET SDK 10
 
 ## Environment Setup
@@ -33,60 +34,62 @@ dotnet user-secrets set "Jwt:SigningKey" "SUPERLONGSECRETKEYDONTSHAREMIN32CHARS"
 ```
 
 ### Frontend
-
+Vite defaults to `localhost:5173` but this is configurable via `./frontend/.env.example` if needed.
 ### Docker Compose
+#### Diagram
+```mermaid
+flowchart TB
+
+    %% Client
+    User[Browser]
+
+    %% Gateway
+    Nginx[Nginx Reverse Proxy<br>:80]
+
+    %% Services
+    Frontend[React Frontend<br>:3000]
+    Backend[.NET Backend API<br>:8080]
+
+    %% Database
+    Postgres[(PostgreSQL Database)]
+
+    %% External traffic
+    User --> Nginx
+
+    %% Routing
+    Nginx -->|"/"| Frontend
+    Nginx -->|"/api"| Backend
+
+    %% Internal services
+    Backend --> Postgres
+
+    class User,Nginx public;
+    class Frontend,Backend internal;
+    class Postgres db;
+```
+
+#### Running
 Docker compose uses a enviroment file called `.env.docker`located in root.  
 So start by `cp .env.docker.example .env.docker` and fill out your secrets if you want to use docker compose. 
 Then run the containers using:  
 ```bash
-docker-compose --env-file .env.docker up --build
+docker compose --env-file .env.docker up --build
 ```
 Ports: 
 - The API will be available at `http://localhost:8080` 
 - PostgreSQL at `http://localhost:5432`
-- Frontendat `http://localhost:3000`
+- Frontend at `http://localhost:3000`
+- Nginx reverse proxy at `http://localhost:80`
 
-## Running with Docker Compose (Full Stack)
-
-This runs both the API and PostgreSQL database in containers:
-
-```bash
-docker compose up --build
-```
-
-
-To stop the containers:
-```bash
-docker compose down
-```
-
-To stop and remove all data:
-```bash
-docker compose down -v
-```
+> **Note:** We are exposing ports 3000 (Frontend) and 8080 (API) directly for development and debugging convenience. In a production environment, these ports would typically be closed, and all traffic would be routed through the Nginx reverse proxy on port 80.
 
 ## Development with PostgreSQL Only
 
-For faster development iteration, run just the PostgreSQL container and run the .NET backend locally.
+For faster development iteration, run just the PostgreSQL container and run the .NET backend and Frontend locally.
+- `dotnet run /backend/Api`
+- `npm run dev /frontend`
 
-# Project Structure
-```
-root/
-backend/
-  Api/
-    Program.cs                # API entrypoint, DI setup, middleware, auth, CORS
-    Controllers/              # HTTP layer, Defines routes and endpoints
-    DTOs/                     # Data Transfer Objects (API contracts)
-    Services/                 # Business logic layer
-      Interfaces/             # Service contracts (abstractions), used by Controllers
-      Implementations/        # Concrete service implementations
-    Models/                   # Domain models / EF Core entities
-    Data/                     # Persistence layer
-      AppDbContext.cs         # EF Core DbContext
-frontend/
-  frontend-app/ # React web application
-```
-# Project documentation
+## Project documentation
 The repo folder `\project-documentaion` contains diagrams, notes and other important documents created and gathered while we planned / developed this application.  
 - Diagrams: `class-diagram.png`, `system-architecture-diagram.png`, `use-case-diagram.png`,
 - Notes: `brainstormin.md`, etc
