@@ -36,21 +36,15 @@ dotnet user-secrets set "Jwt:SigningKey" "SUPERLONGSECRETKEYDONTSHAREMIN32CHARS"
 
 ### Docker Compose
 Docker compose uses a enviroment file called `.env.docker`located in root.  
-So start by `cp .env.docker.example .env.docker` and fill out your secrets if you want to use docker compose.  
-
-Create a `.env` file in the project root with the following variables:
+So start by `cp .env.docker.example .env.docker` and fill out your secrets if you want to use docker compose. 
+Then run the containers using:  
+```bash
+docker-compose --env-file .env.docker up --build
 ```
-Database__Host=localhost
-Database__Port=5432
-Database__Name=tvshowlogger
-Database__User=user
-Database__Password=pwd123
-
-Jwt__Issuer=TvShowloggerAPI
-Jwt__Audience=TvShowloggerClient
-Jwt__ExpiresInMinutes=60
-Jwt__SigningKey=SUPERSECREKEYITSVERYLONGANDNEEDSTOBEOVER32CHARS
-```
+Ports: 
+- The API will be available at `http://localhost:8080` 
+- PostgreSQL at `http://localhost:5432`
+- Frontendat `http://localhost:3000`
 
 ## Running with Docker Compose (Full Stack)
 
@@ -60,7 +54,6 @@ This runs both the API and PostgreSQL database in containers:
 docker compose up --build
 ```
 
-The API will be available at `http://localhost:8080` and PostgreSQL at `localhost:5432`.
 
 To stop the containers:
 ```bash
