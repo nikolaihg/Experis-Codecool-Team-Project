@@ -1,8 +1,8 @@
 import styles from "./TVShowCard.module.css"
-import type { TVShow, UserShowEntry } from '../types';
+import type {UserShowEntry } from '../types';
 
 
-export const STATUS_MAP = {
+const STATUS_MAP = {
   1: "Planning",
   2: "Watching",
   3: "Completed",
@@ -10,7 +10,7 @@ export const STATUS_MAP = {
   5: "Dropped",
 }
 
-export const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATUS_MAP] ?? "Unknown";
+const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATUS_MAP] ?? "Unknown";
 
 
 type TVShowCardProps = {
