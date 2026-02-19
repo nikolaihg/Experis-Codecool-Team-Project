@@ -5,6 +5,10 @@
 
 # dotenv files
 .env
+.env*
+*.env*
+!.env.docker.example
+!.env.example
 
 # User-specific files
 *.rsuser

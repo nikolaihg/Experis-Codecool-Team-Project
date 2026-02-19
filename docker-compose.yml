@@ -2,31 +2,48 @@
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./backend/Dockerfile
     container_name: tvshowlogger-api
     ports:
       - "8080:8080"
-    env_file: .env
+    env_file: .env.docker
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=tvshowlogger;Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   postgres:
-    image: postgres:latest
+    image: postgres:18
     container_name: tvshowlogger-postgres
     restart: always
-    env_file: .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-tvshowlogger}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    env_file: .env.docker
     environment:
-      POSTGRES_DB: tvshowlogger
-      POSTGRES_USER: ${Database__User}
-      POSTGRES_PASSWORD: ${Database__Password}
+      POSTGRES_DB: ${POSTGRES_DB:-tvshowlogger}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+  nginx:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8080}
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - api
+      - postgres
+    restart: unless-stopped
 
 volumes:
   postgres_data:
-      
-      
-  
