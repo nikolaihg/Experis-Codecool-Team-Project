@@ -1,6 +1,6 @@
 # Codecool bootcamp Jan-Feb 2026
 Goal: Develop a fullstack data-driven application with .NET, React, PostgreSQL  
-Development is done with in an aglie style with 4 planned sprints and a linked github project page for this specific repo: [Experis-Codecool-team-project](https://github.com/users/nikolaihg/projects/2)
+Development is done in an agile style with 4 planned sprints and a linked github project page for this specific repo: [Experis-Codecool-team-project](https://github.com/users/nikolaihg/projects/2)
 
 ## Getting Started
 ### Prerequisites
@@ -12,12 +12,12 @@ Development is done with in an aglie style with 4 planned sprints and a linked g
 ### Tech Summary
 - **Frontend**: React (Vite)
 - **Backend**: ASP.NET Core (.NET 10) REST API
-- **Database**: PostgreSQL (Entiy Framework Core)
+- **Database**: PostgreSQL (Entity Framework Core)
 - **Reverse Proxy**: NGINX
 - **AUTH**: JWT
 - **Monorepo structure**: shared root folder with .env file
 - **Docker**: Everything is dockerized and compose for easy running
-- **Tooling**:: Node.js. npm/pnpm. .NET SDK 10
+- **Tooling**: Node.js. npm/pnpm. .NET SDK 10
 
 ## Environment Setup
 ### Backend
@@ -28,9 +28,9 @@ cd backend/Api
 dotnet user-secrets init
 # 2. Set postgres connection string
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=tvshowlogger;Username=YOURUSERNAME;Password=YOURPASSWORD"
-# 4. Set JWT signingKey
+# 3. Set JWT signingKey
 dotnet user-secrets set "Jwt:SigningKey" "SUPERLONGSECRETKEYDONTSHAREMIN32CHARS"
-# 5. Change issuer and audience in ./backend/Api/appsettings.Docker.json if you want to change these
+# 4. Change issuer and audience in ./backend/Api/appsettings.Docker.json if you want to change these
 ```
 
 ### Frontend
@@ -69,7 +69,7 @@ flowchart TB
 ```
 
 #### Running
-Docker compose uses a enviroment file called `.env.docker`located in root.  
+Docker compose uses an environment file called `.env.docker` located in root.  
 So start by `cp .env.docker.example .env.docker` and fill out your secrets if you want to use docker compose. 
 Then run the containers using:  
 ```bash
@@ -90,6 +90,6 @@ For faster development iteration, run just the PostgreSQL container and run the 
 - `npm run dev /frontend`
 
 ## Project documentation
-The repo folder `\project-documentaion` contains diagrams, notes and other important documents created and gathered while we planned / developed this application.  
+The repo folder `\project-documentation` contains diagrams, notes and other important documents created and gathered while we planned / developed this application.  
 - Diagrams: `class-diagram.png`, `system-architecture-diagram.png`, `use-case-diagram.png`,
-- Notes: `brainstormin.md`, etc
+- Notes: `brainstorming.md`, etc
