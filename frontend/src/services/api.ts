@@ -1,5 +1,4 @@
 export async function addTvShowToList(
-  userId: string,
   listId: number,
   tvShowId: string,
   status?: number,
@@ -43,7 +42,7 @@ export async function addTvShowToList(
   return response.json();
 }
 
-export async function getUserLists(userId: string): Promise<Array<{ id: number; name: string }>> {
+export async function getUserLists(): Promise<Array<{ id: number; name: string }>> {
   const token = localStorage.getItem("auth_token");
   if (!token) {
     throw new Error("No auth token found");
