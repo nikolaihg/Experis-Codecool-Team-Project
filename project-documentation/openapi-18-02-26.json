@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "Api | v1",
+    "title": "Tvshowlogger Api | v3",
     "version": "1.0.0"
   },
   "servers": [
@@ -518,6 +518,27 @@
                 "string"
               ],
               "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TVShow/search": {
+      "get": {
+        "tags": [
+          "TVShow"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
