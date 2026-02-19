@@ -78,7 +78,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             localStorage.setItem("auth_token", tokenFromServer)
             localStorage.setItem("auth_user", JSON.stringify(json.user))
             setToken(tokenFromServer)
-            setUser(json.user)
+            setUser(decodeTokenUser(localStorage.getItem("auth_token")))
             console.log(tokenFromServer)
 
         } catch(err) {
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             localStorage.setItem("auth_token", tokenFromServer)
             localStorage.setItem("auth_user", JSON.stringify(json.user))
             setToken(tokenFromServer)
-            setUser(json.user)
+            setUser(decodeTokenUser(localStorage.getItem("auth_token")))
             try {
                 await createDiary(tokenFromServer)
             } catch(err){
