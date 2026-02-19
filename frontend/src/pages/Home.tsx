@@ -3,32 +3,11 @@ import { TVShowCard } from "../components/TVShowCard";
 import { useAuth } from "../auth/AuthContext";
 import { AddTvShow } from '../components/addTvShow';
 import styles from "../components/TVShowCard.module.css"
-import TvShowSearch from "../components/TvShowSearch";
-import type { TVShow } from "../types";
 
 
 const Home: React.FC = () => {
   const { user, token } = useAuth()
-  const [diary, setDiary] = useState(null)
   const [data, setData] = useState([])
-  const [selected, setSelected] = useState<TVShow | null>(null);
-
-  const recentEntries = [{
-    id: "1",
-    title: "Spider-Man",
-    posterUrl: "https://original.fontsinuse.com/fontsinuse.com/use-images/165/165448/165448.jpeg",
-    rating: 4,
-    releaseYear: 2002,
-    genre: "Action"
-  },
-  {
-    id: "2",
-    title: "Spider-Man 2",
-    posterUrl: "https://www.movieposters.com/cdn/shop/products/2a27abf44e604b54903eb8e2beba66eb_2fafebce-cc32-41e1-a559-2b078d0f15f6_grande.jpg?v=1762513052",
-    rating: 4,
-    releaseYear: 2004,
-    genre: "Action"
-  }]
 
   useEffect(() => {
   // Code for the side effect
@@ -47,8 +26,7 @@ const Home: React.FC = () => {
                   throw new Error("Unable to fetch diary");
               }
               const json = await response.json()
-              const diaryList = json.find((item: { type: number; }) => item.type === 0);
-              setDiary(diaryList)
+                json.find((item: { type: number; }) => item.type === 0);
           } catch(err) {
               if (err instanceof Error)
                   console.log(err.message)
@@ -92,11 +70,6 @@ const Home: React.FC = () => {
   return (
     <div className="page-container" style={{maxWidth: 500}}>
       <h2>Recent diary</h2>
-        {/* {recentEntries.length === 0 ?
-          <p>No diary entries yet. Add your first show!</p>
-          :
-          recentEntries.map(e => <TVShowCard tvShow={e} />)
-        } */}
         {data.length === 0 ?
           <p>No diary entries yet. Add your first show!</p>
           :
@@ -106,8 +79,21 @@ const Home: React.FC = () => {
         <button className={styles.button} onClick={() => setAdding(!adding)}>
           <span className={styles.buttonText}>+</span>
         </button>
-        <TvShowSearch onSelect={setSelected} />
-        {adding ? <AddTvShow tvShow={selected} /> : null}
+        {adding ? (
+          <div className={styles.modalBackdrop} onClick={() => setAdding(false)}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <button
+                className={styles.modalCloseButton}
+                type="button"
+                onClick={() => setAdding(false)}
+                aria-label="Close add TV show form"
+              >
+                ×
+              </button>
+              <AddTvShow />
+            </div>
+          </div>
+        ) : null}
         
       </div>
   )

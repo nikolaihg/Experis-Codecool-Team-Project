@@ -1,5 +1,4 @@
-const API_BASE = "http://localhost:5102";
-
+//const API_BASE = "http://localhost:5102";
 
 export async function addTvShowToList(
   userId: string,
@@ -13,7 +12,7 @@ export async function addTvShowToList(
     throw new Error("No auth token found");
   }
 
-  const response = await fetch(`${API_BASE}/api/User/${userId}/lists/${Number(listId)}`, {
+  const response = await fetch(`api/lists/${Number(listId)}/items`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +51,7 @@ export async function getUserLists(userId: string): Promise<Array<{ id: number; 
     throw new Error("No auth token found");
   }
 
-  const response = await fetch(`${API_BASE}/api/User/${userId}/lists`, {
+  const response = await fetch(`api/Lists`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

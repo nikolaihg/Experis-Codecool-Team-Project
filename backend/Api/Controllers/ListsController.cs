@@ -73,7 +73,6 @@ public class ListsController : ControllerBase
                     Status = itemDto.Status,
                     Rating = itemDto.Rating ?? 0, // default if null
                     LoggedAt = now,
-                    Position = 0 // Default position
                 });
             }
         }

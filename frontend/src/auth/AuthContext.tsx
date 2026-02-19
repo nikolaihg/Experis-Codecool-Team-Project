@@ -1,4 +1,4 @@
-import { useContext, type ReactNode } from "react";
+import { useContext, useEffect, type ReactNode } from "react";
 import { createContext, useState } from "react";
 
 
@@ -18,12 +18,48 @@ interface AuthProviderProps {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
+type JwtPayload = {
+    sub?: string;
+    email?: string;
+    nameid?: string;
+    [key: string]: unknown;
+};
+
+function decodeTokenUser(token: string | null): { id: string; email: string } | null {
+    if (!token) return null;
+
+    try {
+        const parts = token.split(".");
+        if (parts.length < 2) return null;
+
+        const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+        const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
+        const json = atob(padded);
+        const payload = JSON.parse(json) as JwtPayload;
+
+        const id =
+            (payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] as string | undefined) ??
+            payload.nameid ??
+            payload.sub;
+        const email = payload.email ?? "";
+
+        if (!id) return null;
+        return { id, email };
+    } catch {
+        return null;
+    }
+}
+
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [token, setToken] = useState(() => { return localStorage.getItem("token") })
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState<{id: string, email: string} | null>(() => decodeTokenUser(localStorage.getItem("token")))
     const [diaryListId, setDiaryListId] = useState(null)
     const isAuthenticated = !!token;
+
+    useEffect(() => {
+        setUser(decodeTokenUser(token));
+    }, [token]);
 
     const value = {
         isAuthenticated,
@@ -54,7 +90,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             localStorage.setItem("token", tokenFromServer)
             setToken(tokenFromServer)
-            setUser(json.user)
             console.log(tokenFromServer)
 
         } catch(err) {
@@ -88,9 +123,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             localStorage.setItem("token", tokenFromServer)
             setToken(tokenFromServer)
-            setUser(json.user)
+
+            const decodedUser = decodeTokenUser(tokenFromServer)
             try {
-                await createDiary(json.user.id, tokenFromServer)
+                if (decodedUser?.id) {
+                    await createDiary(decodedUser.id, tokenFromServer)
+                }
             } catch(err){
                 console.log(err)
             }
@@ -113,7 +151,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         };
 
         try {
-            const response = await fetch(`/api/User/${userId}/lists`,
+            const response = await fetch(`/api/lists`,
                 {
                     method: 'POST',
                     headers: {

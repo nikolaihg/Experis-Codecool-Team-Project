@@ -30,7 +30,6 @@ public class UserListRepository : IUserListRepository
     {
         return await _context.UserLists
             .Include(l => l.UserShowEntryList)
-                .ThenInclude(e => e.TVShow)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
@@ -39,7 +38,6 @@ public class UserListRepository : IUserListRepository
         return await _context.UserLists
             .Where(l => l.UserId == userId)
             .Include(l => l.UserShowEntryList)
-                .ThenInclude(e => e.TVShow)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -49,7 +47,6 @@ public class UserListRepository : IUserListRepository
         return await _context.UserLists
             .Where(l => l.IsPublic)
             .Include(l => l.UserShowEntryList)
-                .ThenInclude(e => e.TVShow)
             .AsNoTracking()
             .ToListAsync();
     }
