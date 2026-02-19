@@ -5,7 +5,12 @@ import { getUserLists, addTvShowToList } from "../services/api";
 import { useAuth } from "../auth/AuthContext"
 import TvShowSearch from "./TvShowSearch";
 import type { TVShow } from "../types";
-import type { AddTvShowProps, FormState, TVShowOption, UserListOption, AddTvShowPayload } from "../types";
+import type { FormState, TVShowOption, UserListOption, AddTvShowPayload } from "../types";
+
+type AddTvShowProps = {
+  tvShow?: TVShowOption | null;
+  onAdd?: (payload: AddTvShowPayload) => Promise<void> | void;
+};
 
 const defaultForm: FormState = {
 	userListId: "",
