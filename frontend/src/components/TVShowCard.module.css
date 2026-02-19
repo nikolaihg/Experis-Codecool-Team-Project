@@ -1,4 +1,5 @@
 .card {
+  position: relative;
   display: flex;
   gap: 16px;
   background-color: var(--color-surface);
@@ -58,6 +59,33 @@
   font-weight: 600;
   color: var(--color-text-dim);
 }
+
+.deleteButton:hover {
+  background: rgba(255, 0, 0, 0.25);
+}
+
+.deleteButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: var(--color-text-main);
+
+  font-size: 14px;
+  font-weight: bold;
+
+  padding: 4px 8px;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background: rgba(255, 0, 0, 0.25);
+}
+
 
 /* Responsive */
 @media (max-width: 600px) {

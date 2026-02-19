@@ -15,14 +15,22 @@ export const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATU
 
 type TVShowCardProps = {
     entry: UserShowEntry;
+    onDelete: (userListId: number, entryId: number) => void
 };
 
-export function TVShowCard({ entry }: TVShowCardProps ) {
+export function TVShowCard({ entry, onDelete }: TVShowCardProps ) {
 
 
   return (
     <>
         <div className={styles.card}>
+            <button
+                className={styles.deleteButton}
+                onClick={() => onDelete(entry.userListId, entry.id)}
+            >
+                ✕
+            </button>
+
             <img
                 className={styles.poster}
                 src={entry.tvShow.posterUrl}
