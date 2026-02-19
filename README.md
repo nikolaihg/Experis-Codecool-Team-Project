@@ -44,10 +44,10 @@ flowchart TB
     User[Browser]
 
     %% Gateway
-    Nginx[Nginx Reverse Proxy<br>:80]
+    Nginx[Nginx Reverse Proxy<br>:3000]
 
     %% Services
-    Frontend[React Frontend<br>:3000]
+    Frontend[React Frontend<br>Static]
     Backend[.NET Backend API<br>:8080]
 
     %% Database
@@ -57,7 +57,7 @@ flowchart TB
     User --> Nginx
 
     %% Routing
-    Nginx -->|"/"| Frontend
+    Nginx -->|"served by nginx"| Frontend
     Nginx -->|"/api"| Backend
 
     %% Internal services
@@ -78,10 +78,9 @@ docker compose --env-file .env.docker up --build
 Ports: 
 - The API will be available at `http://localhost:8080` 
 - PostgreSQL at `http://localhost:5432`
-- Frontend at `http://localhost:3000`
-- Nginx reverse proxy at `http://localhost:80`
+- Nginx reverse proxy (Frontend) at `http://localhost:3000`
 
-> **Note:** We are exposing ports 3000 (Frontend) and 8080 (API) directly for development and debugging convenience. In a production environment, these ports would typically be closed, and all traffic would be routed through the Nginx reverse proxy on port 80.
+> **Note:** We are exposing port 8080 (API) directly for development and debugging convenience. In a production environment, this port would typically be closed, and all traffic would be routed through the Nginx reverse proxy on port 3000.
 
 ## Development with PostgreSQL Only
 
