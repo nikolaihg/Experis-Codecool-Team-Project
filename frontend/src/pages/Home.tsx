@@ -1,52 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { TVShowCard } from "../components/TVShowCard";
 import { useAuth } from "../auth/AuthContext";
-import TvShowSearch from "../components/TvShowSearch";
-import type { TVShow } from "../types";
+import type { UserShowEntry } from "../types";
 
 
 const Home: React.FC = () => {
-  const { user, token } = useAuth()
-  const [diary, setDiary] = useState(null)
-  const [data, setData] = useState([])
-  const [selected, setSelected] = useState<TVShow | null>(null);
+  const { token } = useAuth()
+  const [diaryEntryList, setDiaryEntryList] = useState<UserShowEntry[]>([])
 
-  const recentEntries = [{
-    id: "1",
-    title: "Spider-Man",
-    posterUrl: "https://original.fontsinuse.com/fontsinuse.com/use-images/165/165448/165448.jpeg",
-    rating: 4,
-    releaseYear: 2002,
-    genre: "Action"
-  },
-  {
-    id: "2",
-    title: "Spider-Man 2",
-    posterUrl: "https://www.movieposters.com/cdn/shop/products/2a27abf44e604b54903eb8e2beba66eb_2fafebce-cc32-41e1-a559-2b078d0f15f6_grande.jpg?v=1762513052",
-    rating: 4,
-    releaseYear: 2004,
-    genre: "Action"
-  }]
 
   useEffect(() => {
-  // Code for the side effect
     async function fetchDiary() {
-      if (!user) return
+      if (!token) return
           try {
-              const response = await fetch(`/api/User/${user.id}/lists`, 
+              const response = await fetch(`/api/lists`, 
                   {
                       method: 'GET',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': `Bearer ${token}`,
-                      }
+                      headers: { 'Authorization': `Bearer ${token}` }
                   })
               if (!response.ok) {
                   throw new Error("Unable to fetch diary");
               }
               const json = await response.json()
               const diaryList = json.find((item: { type: number; }) => item.type === 0);
-              setDiary(diaryList)
+              setDiaryEntryList(diaryList.userShowEntryList)
+              console.log(diaryList)
           } catch(err) {
               if (err instanceof Error)
                   console.log(err.message)
@@ -54,55 +32,18 @@ const Home: React.FC = () => {
       }
     fetchDiary()
     
-  }, [user, token]);
-
-
-  useEffect(() => {
-    async function fetchTvShows() {
-      if (!token) return
-          try {
-              const response = await fetch(`/api/tvshow/`, 
-                  {
-                      method: 'GET',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': `Bearer ${token}`,
-                      }
-                  })
-              if (!response.ok) {
-                  throw new Error("Unable to fetch tvshows");
-              }
-              const json = await response.json()
-              setData(json)
-              console.log("hei")
-              console.log(json)
-          } catch(err) {
-              if (err instanceof Error)
-                  console.log(err.message)
-          }
-      }
-    fetchTvShows()
-    
   }, [token]);
 
 
 
   return (
     <div className="page-container" style={{maxWidth: 500}}>
-      <h2>Recent diary</h2>
-        {/* {recentEntries.length === 0 ?
+      <h2>Diary</h2>
+        {diaryEntryList.length === 0 ?
           <p>No diary entries yet. Add your first show!</p>
           :
-          recentEntries.map(e => <TVShowCard tvShow={e} />)
-        } */}
-        {data.length === 0 ?
-          <p>No diary entries yet. Add your first show!</p>
-          :
-          data.map(e => <TVShowCard tvShow={e} />)
+          diaryEntryList.map(e => <TVShowCard key={e.id} entry={e} />)
         }
-        
-        {/* {diary ? "Something is here"  : "It is not here"} */}
-        <TvShowSearch onSelect={setSelected} />
       </div>
   )
 };

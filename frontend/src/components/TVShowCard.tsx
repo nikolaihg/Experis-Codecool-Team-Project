@@ -1,31 +1,55 @@
-import { useState, useEffect } from 'react'
 import styles from "./TVShowCard.module.css"
-import type { TVShow } from '../types';
-// import './App.css'
+import type { TVShow, UserShowEntry } from '../types';
+
+
+export const STATUS_MAP = {
+  1: "Planning",
+  2: "Watching",
+  3: "Completed",
+  4: "OnHold",
+  5: "Dropped",
+}
+
+export const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATUS_MAP] ?? "Unknown";
 
 
 type TVShowCardProps = {
-    tvShow: TVShow;
+    entry: UserShowEntry;
 };
 
-
-export function TVShowCard({ tvShow }: TVShowCardProps ) {
-  const [data, setData] = useState([])
-
+export function TVShowCard({ entry }: TVShowCardProps ) {
 
 
   return (
     <>
         <div className={styles.card}>
-            <img className={styles.poster} src={tvShow.posterUrl} alt={tvShow.title} width={150} height={200} />
-            
-            <div className={styles.content1}>
-                <h3>{tvShow.title}</h3>
-                <p>{tvShow.releaseYear}</p>
-                <p>Rating: {tvShow.rating} / 10</p>
-                <p>{tvShow.genre}</p>
-            </div>
+            <img
+                className={styles.poster}
+                src={entry.tvShow.posterUrl}
+                alt={entry.tvShow.title}
+            />
 
+            <div className={styles.content}>
+                <h3 className={styles.title}>{entry.tvShow.title}</h3>
+
+                <div className={styles.meta}>
+                <span>{entry.tvShow.releaseYear}</span>
+                <span className={styles.dot}>•</span>
+                <span>{entry.tvShow.genre}</span>
+                <span className={styles.dot}>•</span>
+                <span>IMDb {entry.tvShow.imdbRating}/10</span>
+                </div>
+
+                <div className={styles.row}>
+                <span className={styles.label}>Status:</span>
+                <span>{getStatus(entry.status)}</span>
+                </div>
+
+                <div className={styles.row}>
+                <span className={styles.label}>Your rating:</span>
+                <span>{entry.rating}/10</span>
+                </div>
+            </div>
         </div>
     </>
   )
