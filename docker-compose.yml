@@ -10,7 +10,7 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=tvshowlogger;Username=${POSTGRES_USER:-user};Password=${POSTGRES_PASSWORD:-postgres}
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=tvshowlogger;Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,7 +26,7 @@
     env_file: .env.docker
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-tvshowlogger}
-      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5432:5432"
