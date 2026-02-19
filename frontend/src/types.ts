@@ -38,14 +38,16 @@ export type AddTvShowPayload = {
   rating?: number;
 };
 
-export type AddTvShowProps = {
-  tvShow?: TVShowOption | null;
-  onAdd?: (payload: AddTvShowPayload) => Promise<void> | void;
-};
-
 export type FormState = {
   userListId: string;
   tvShowId: string;
   status: string;
   rating: string;
+};
+
+export type JwtPayload = {
+    sub?: string;
+    email?: string;
+    nameid?: string;
+    [key: string]: unknown;
 };
