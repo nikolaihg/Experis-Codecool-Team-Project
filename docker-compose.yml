@@ -33,6 +33,7 @@
     volumes:
       - postgres_data:/var/lib/postgresql
   nginx:
+    container_name: tvshowlogger-nginx
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
