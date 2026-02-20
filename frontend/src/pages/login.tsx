@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const Login: React.FC = () => {
@@ -57,9 +57,19 @@ const Login: React.FC = () => {
         />
       </div>
       <button type="submit">Log in</button>
-      <button type="button" onClick={() => window.location.href = "/register"}>
-        Register
-      </button>
+
+      <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+        <p style={{ margin: '0 0 0.25rem', fontSize: '0.9em', color: 'var(--color-text-muted)' }}>
+          Don't have an account?
+        </p>
+        <button 
+          type="button" 
+          onClick={() => navigate("/register")}
+          style={{ width: '100%' }}
+        >
+          Register
+        </button>
+      </div>
     </form>
   );
 }
