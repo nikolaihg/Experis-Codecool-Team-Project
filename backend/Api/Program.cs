@@ -46,17 +46,17 @@ builder.Services
     .AddDefaultTokenProviders();
 
 // CORS
-var myAllowedOrigins = "_myAllowedOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: myAllowedOrigins,
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-});
+//var myAllowedOrigins = "_myAllowedOrigins";
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: myAllowedOrigins,
+//        policy =>
+//        {
+//            policy.WithOrigins("http://localhost:5173")
+//                .AllowAnyHeader()
+//                .AllowAnyMethod();
+//        });
+//});
 
 // Jwt & RBAC stuff
 builder.Services.AddAuthentication(options =>
@@ -120,7 +120,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(myAllowedOrigins);
+//app.UseCors(myAllowedOrigins);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
