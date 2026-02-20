@@ -60,7 +60,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 
 				console.log(`Fetching lists for user ${userId}`); // Debug log
 				
-				const data = await getUserLists(userId);
+				const data = await getUserLists();
 				if (isActive) {
 					setLists(data);
 					setListsError("");
@@ -121,7 +121,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 		try {
 			setIsSubmitting(true);
 			if(userId){
-				await addTvShowToList(userId.toString(), payload.userListId, payload.tvShowId.toString(), Number(payload.status), payload.rating);
+				await addTvShowToList(Number(payload.userListId), payload.tvShowId.toString(), Number(payload.status), payload.rating);
 				setSuccess("Added to list.");
 				setForm(defaultForm);
 				setSelectedShow(null);
