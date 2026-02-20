@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const Login: React.FC = () => {
