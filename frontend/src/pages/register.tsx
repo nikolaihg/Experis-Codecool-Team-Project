@@ -102,6 +102,19 @@ const Register: React.FC = () => {
       </div>
 
       <button type="submit">Register</button>
+      
+      <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+        <p style={{ margin: '0 0 0.25rem', fontSize: '0.9em', color: 'var(--color-text-muted)' }}>
+          Already have an account?
+        </p>
+        <button 
+          type="button" 
+          onClick={() => navigate("/login")}
+          style={{ width: '100%' }}
+        >
+          Login
+        </button>
+      </div>
     </form>
   );
 }
