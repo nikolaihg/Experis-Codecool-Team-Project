@@ -5,7 +5,7 @@ import { EditTvShow } from "./EditTvShow";
 import { useState } from "react";
 
 
-export const STATUS_MAP = {
+const STATUS_MAP = {
   1: "Planning",
   2: "Watching",
   3: "Completed",
@@ -13,7 +13,7 @@ export const STATUS_MAP = {
   5: "Dropped",
 }
 
-export const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATUS_MAP] ?? "Unknown";
+const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATUS_MAP] ?? "Unknown";
 
 
 type TVShowCardProps = {
