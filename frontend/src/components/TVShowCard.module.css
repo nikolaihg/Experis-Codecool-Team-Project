@@ -60,15 +60,37 @@
   color: var(--color-text-dim);
 }
 
+.actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+
+.editButton {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: var(--color-text-main);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.editButton:hover {
+  background: rgba(0, 128, 255, 0.25);
+  color: var(--color-text-main);
+}
+
 .deleteButton:hover {
   background: rgba(255, 0, 0, 0.25);
 }
 
 .deleteButton {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-
   background: rgba(255, 255, 255, 0.12);
   border: none;
   color: var(--color-text-main);
@@ -84,6 +106,7 @@
 
 .deleteButton:hover {
   background: rgba(255, 0, 0, 0.25);
+  color: var(--color-text-main);
 }
 
 

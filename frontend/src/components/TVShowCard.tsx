@@ -1,5 +1,8 @@
 import styles from "./TVShowCard.module.css"
-import type { TVShow, UserShowEntry } from '../types';
+import type { UserShowEntry } from '../types';
+import { useAuth } from "../auth/AuthContext";
+import { EditTvShow } from "./EditTvShow";
+import { useState } from "react";
 
 
 export const STATUS_MAP = {
@@ -14,22 +17,56 @@ export const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATU
 
 
 type TVShowCardProps = {
-    entry: UserShowEntry;
-    onDelete: (userListId: number, entryId: number) => void
+    entry: UserShowEntry
+    onChange: () => void
 };
 
-export function TVShowCard({ entry, onDelete }: TVShowCardProps ) {
+export function TVShowCard({ entry, onChange }: TVShowCardProps ) {
+    const { token } = useAuth()
+    const [editing, setEditing] = useState(false);
+    const openEdit = () => setEditing(true);
+    const closeEdit = () => setEditing(false);
+
+
+    async function DeleteEntry(userListId: number, entryId: number) {
+        if (!token) return
+        let res: Response
+        try {
+            res = await fetch(`/api/lists/${userListId}/items/${entryId}`,
+            {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+        } catch {
+            console.error("Network error");
+            return;
+        }
+
+        if (res.status === 204) {
+            onChange()
+            return
+        }
+
+        const message = await res.text();
+        if (!res.ok) {
+            console.error("Delete failed:", message || "Unknown error");
+            return;
+        }
+    }
 
 
   return (
     <>
         <div className={styles.card}>
-            <button
-                className={styles.deleteButton}
-                onClick={() => onDelete(entry.userListId, entry.id)}
-            >
-                ✕
-            </button>
+            <div className={styles.actions}>
+                <button className={styles.editButton} onClick={openEdit}>Edit</button>
+                <button
+                    className={styles.deleteButton}
+                    onClick={() => DeleteEntry(entry.userListId, entry.id)}
+                >
+                    ✕
+                </button>
+            </div>
 
             <img
                 className={styles.poster}
@@ -58,6 +95,13 @@ export function TVShowCard({ entry, onDelete }: TVShowCardProps ) {
                 <span>{entry.rating}/10</span>
                 </div>
             </div>
+
+            <EditTvShow
+                open={editing}
+                entry={entry}
+                onClose={closeEdit}
+                onSaved={onChange}
+            />
         </div>
     </>
   )
