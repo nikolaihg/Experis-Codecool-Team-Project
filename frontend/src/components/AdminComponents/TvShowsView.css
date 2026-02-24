@@ -1,0 +1,153 @@
+.admin-view-container {
+    padding: 20px;
+    max-width: 95vw; /* Use viewport width percentage to ensure it fits on screen */
+    margin: 0 auto;
+    color: var(--color-text-main);
+}
+
+.admin-view-header {
+    margin-bottom: 2rem;
+}
+
+.admin-view-title {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.admin-view-description {
+    color: var(--color-text-muted);
+}
+
+.admin-table-container {
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    width: 100%; /* Ensure container takes full width */
+    overflow-x: auto; /* Enable horizontal scrolling if content overflows */
+}
+
+.admin-table {
+    width: 100%;
+    min-width: 800px; /* Ensure table has enough width for columns */
+    border-collapse: collapse;
+}
+
+.admin-table th, .admin-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-main);
+}
+
+.admin-table td:last-child {
+    white-space: nowrap;
+    /* Removed display: flex on td to fix potential layout issues with borders */
+}
+
+.admin-table td:last-child .action-buttons-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.admin-table th {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--color-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    white-space: nowrap; /* Prevent headers from wrapping */
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tvshow-title-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tvshow-mini-poster {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-small {
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.edit-btn {
+    background-color: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.edit-btn:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+}
+
+.delete-btn {
+    background-color: transparent;
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+}
+
+.delete-btn:hover {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.error-message {
+    color: var(--color-danger);
+    padding: 20px;
+    background-color: rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.create-tvshow-container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem; /* Add some space at the bottom of the page */
+}
+
+.create-tvshow-btn {
+    padding: 10px 24px;
+    background-color: var(--color-primary);
+    color: var(--color-bg-main); /* Ensure contrast */
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.create-tvshow-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.create-tvshow-btn:active {
+    transform: translateY(0);
+}
