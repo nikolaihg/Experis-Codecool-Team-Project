@@ -10,6 +10,9 @@ import Login from './pages/login'
 import Register from './pages/register'
 import NotFound from './components/NotFound'
 import { RequireAuth } from './auth/RequireAuth'
+import Profile from './pages/Profile' 
+import { ProfileMenu } from './components/Header/ProfileMenu'
+
 
 function App() {
   return (
@@ -25,6 +28,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/watchlist" element={<WatchList />} />
+            <Route path="/profilemenu" element={<ProfileMenu />} />
+            <Route path="/profile" element={<Profile />} /> 
           </Route>
         </Routes>
       </main>
