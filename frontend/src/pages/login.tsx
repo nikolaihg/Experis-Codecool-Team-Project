@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     // Here you'll call your login API later
     try {
       await login(username, email, password)
-    } catch(err){
+    } catch (err) {
       console.log(err)
     }
     navigate("/")
@@ -25,7 +25,7 @@ const Login: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-        <h1>Login</h1>
+      <h1>Login</h1>
       <div>
         <label htmlFor="username">Username </label>
         <input
@@ -46,7 +46,6 @@ const Login: React.FC = () => {
           autoComplete="email"
         />
       </div>
-
       <div>
         <label htmlFor="password">Password </label>
         <input
@@ -57,11 +56,20 @@ const Login: React.FC = () => {
           autoComplete="current-password"
         />
       </div>
-
       <button type="submit">Log in</button>
-      <button type="button" onClick={() => window.location.href = "/register"}>
-        Register
-      </button>
+
+      <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+        <p style={{ margin: '0 0 0.25rem', fontSize: '0.9em', color: 'var(--color-text-muted)' }}>
+          Don't have an account?
+        </p>
+        <button 
+          type="button" 
+          onClick={() => navigate("/register")}
+          style={{ width: '100%' }}
+        >
+          Register
+        </button>
+      </div>
     </form>
   );
 }

@@ -8,11 +8,11 @@ import About from './pages/About'
 import WatchList from './pages/WatchList'
 import Login from './pages/login'
 import Register from './pages/register'
-import NotFound from './components/NotFound'
 import { RequireAuth } from './auth/RequireAuth'
 import Profile from './pages/Profile' 
 import { ProfileMenu } from './components/Header/ProfileMenu'
 
+import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="*" element={<NotFound />}></Route>
+          <Route path="*" element={<NotFoundPage />}></Route>
 
           <Route element={<RequireAuth />}>
             <Route path="/" element={<Home />} />

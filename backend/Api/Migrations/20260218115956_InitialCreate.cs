@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,11 +65,9 @@ namespace Api.Migrations
                     ReleaseYear = table.Column<int>(type: "integer", nullable: false),
                     PosterUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    IsArchived = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ReleaseDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Genre = table.Column<string>(type: "text", nullable: false),
-                    Rating = table.Column<double>(type: "double precision", nullable: false),
+                    ImdbRating = table.Column<double>(type: "double precision", nullable: false),
                     AmountOfEpisodes = table.Column<int>(type: "integer", nullable: false),
                     TotalUsersWatched = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -215,26 +213,24 @@ namespace Api.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    Rating = table.Column<int>(type: "integer", nullable: false),
+                    Rating = table.Column<int>(type: "integer", nullable: true),
                     LoggedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Position = table.Column<int>(type: "integer", nullable: false),
-                    UserListId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserListId1 = table.Column<int>(type: "integer", nullable: false),
-                    TVShowId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TVShowId1 = table.Column<int>(type: "integer", nullable: false)
+                    UserListId = table.Column<int>(type: "integer", nullable: false),
+                    TVShowId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserShowEntries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserShowEntries_TVShows_TVShowId1",
-                        column: x => x.TVShowId1,
+                        name: "FK_UserShowEntries_TVShows_TVShowId",
+                        column: x => x.TVShowId,
                         principalTable: "TVShows",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserShowEntries_UserLists_UserListId1",
-                        column: x => x.UserListId1,
+                        name: "FK_UserShowEntries_UserLists_UserListId",
+                        column: x => x.UserListId,
                         principalTable: "UserLists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -283,14 +279,14 @@ namespace Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserShowEntries_TVShowId1",
+                name: "IX_UserShowEntries_TVShowId",
                 table: "UserShowEntries",
-                column: "TVShowId1");
+                column: "TVShowId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserShowEntries_UserListId1",
+                name: "IX_UserShowEntries_UserListId",
                 table: "UserShowEntries",
-                column: "UserListId1");
+                column: "UserListId");
         }
 
         /// <inheritdoc />

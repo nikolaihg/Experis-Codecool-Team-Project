@@ -1,0 +1,79 @@
+
+.button {
+  font-size: 48px;
+  background: #007bff;
+  color: white;
+  border: none;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  position: fixed;
+  right: 24px;
+  bottom: 50px;
+  z-index: 1000;
+}
+
+.buttonText {
+  font-size: 32px;
+  line-height: 1;
+  transform: translateY(-3px);
+  display: flex;
+}
+
+.modalAddButton{
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 16px;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(5, 16, 20, 0.7);
+  z-index: 1100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+.modalContent {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 3rem;
+  right: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  z-index: 1;
+}
+
+.modalCancelButton {
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 16px;
+}

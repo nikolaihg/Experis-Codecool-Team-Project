@@ -5,7 +5,6 @@ using Api.Data;
 using Api.Models;
 using Api.Repositories;
 using Api.Services;
-using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,31 +13,15 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if (builder.Environment.IsDevelopment() && Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != "true")
-{
-    DotEnv.Load();
-}
-
-builder.Configuration.AddEnvironmentVariables();
+// Add support for custom configuration files
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
 // DB Config stuff
-string BuildConnectionString()
-{
-    var host = Environment.GetEnvironmentVariable("Database__Host")
-               ?? throw new ArgumentException("Database__Host is required");
-    var port = Environment.GetEnvironmentVariable("Database__Port")
-               ?? throw new ArgumentException("Database__Port is required");
-    var database = Environment.GetEnvironmentVariable("Database__Name")
-                   ?? throw new ArgumentException("Database__Name is required");
-    var username = Environment.GetEnvironmentVariable("Database__User")
-                   ?? throw new ArgumentException("Database__User is required");
-    var password = Environment.GetEnvironmentVariable("Database__Password")
-                   ?? throw new ArgumentException("Database__Password is required");
-
-    return $"Host={host};Port={port};Username={username};Password={password};Database={database}";
-}
-
-var connectionString = BuildConnectionString();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                       ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 // JWT Config stuff
 builder.Services
@@ -47,10 +30,12 @@ builder.Services
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() 
+                 ?? throw new InvalidOperationException("JWT configuration not found");
 
-string jwtIssuer = Environment.GetEnvironmentVariable("Jwt__Issuer")!;
-string jwtAudience = Environment.GetEnvironmentVariable("Jwt__Audience")!;
-string jwtKey = Environment.GetEnvironmentVariable("Jwt__SigningKey")!;
+string jwtIssuer = jwtOptions.Issuer;
+string jwtAudience = jwtOptions.Audience;
+string jwtKey = jwtOptions.SigningKey;
 
 // Dependency Injection
 // DB stuff
@@ -61,17 +46,17 @@ builder.Services
     .AddDefaultTokenProviders();
 
 // CORS
-var myAllowedOrigins = "_myAllowedOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: myAllowedOrigins,
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-});
+//var myAllowedOrigins = "_myAllowedOrigins";
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: myAllowedOrigins,
+//        policy =>
+//        {
+//            policy.WithOrigins("http://localhost:5173")
+//                .AllowAnyHeader()
+//                .AllowAnyMethod();
+//        });
+//});
 
 // Jwt & RBAC stuff
 builder.Services.AddAuthentication(options =>
@@ -102,16 +87,6 @@ builder.Services.AddAuthorizationBuilder()
         .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
         .RequireAuthenticatedUser()
         .Build());
-
-builder.Services.Configure<JwtOptions>(options =>
-{
-    options.Issuer = jwtIssuer;
-    options.Audience = jwtAudience;
-    options.SigningKey = jwtKey;
-    options.ExpiresInMinutes = int.Parse(
-        Environment.GetEnvironmentVariable("Jwt__ExpiresInMinutes")!
-    );
-});
 
 // Services
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -145,7 +120,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(myAllowedOrigins);
+//app.UseCors(myAllowedOrigins);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
