@@ -62,7 +62,7 @@ public class TVShowController : ControllerBase
         var deleted = await _tvShowRepository.Delete(id);
         if (!deleted) 
             return NotFound();
-        return Ok();
+        return NoContent();
     }
 
     [HttpGet("search")]
