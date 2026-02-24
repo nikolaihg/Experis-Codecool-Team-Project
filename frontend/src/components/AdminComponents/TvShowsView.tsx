@@ -4,12 +4,14 @@ import { getAllTvShows, deleteTvShow } from "../../services/api/tvshows.api";
 import "./TvShowsView.css";
 import { getStatusLabel } from "../../services/utils/tvshowUtil";
 import { ConfirmationModal } from "../ConfirmationModal/ConfirmationModal";
+import { EditTvShowModal } from "./EditTvShowModal";
 
 export function TvShowsView() {
     const [tvShows, setTvShows] = useState<TVShow[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showToDelete, setShowToDelete] = useState<string | null>(null);
+    const [showToEdit, setShowToEdit] = useState<TVShow | null>(null);
 
     useEffect(() => {
         loadTvShows();
@@ -41,6 +43,13 @@ export function TvShowsView() {
         } finally {
             setShowToDelete(null);
         }
+    }
+
+    function handleSaveEdit(updatedShow: TVShow) {
+        setTvShows((prev) => 
+            prev.map((show) => show.id === updatedShow.id ? updatedShow : show)
+        );
+        setShowToEdit(null);
     }
 
     if (loading) return <div>Loading...</div>;
@@ -83,14 +92,23 @@ export function TvShowsView() {
                                 <td>{show.amountOfEpisodes}</td>
                                 <td>{show.imdbRating}</td>
                                 <td>
-                                    <button className="btn-small edit-btn">Edit</button>
-                                    <button className="btn-small delete-btn" onClick={() => setShowToDelete(show.id)}>Delete</button>
+                                    <div className="action-buttons-container">
+                                        <button className="btn-small edit-btn" onClick={() => setShowToEdit(show)}>Edit</button>
+                                        <button className="btn-small delete-btn" onClick={() => setShowToDelete(show.id)}>Delete</button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            <EditTvShowModal
+                isOpen={!!showToEdit}
+                tvShow={showToEdit}
+                onClose={() => setShowToEdit(null)}
+                onSave={handleSaveEdit}
+            />
 
             <ConfirmationModal 
                 isOpen={!!showToDelete}

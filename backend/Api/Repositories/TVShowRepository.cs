@@ -12,7 +12,7 @@ public class TVShowRepository : ITVShowRepository
     {
         _context = context;
     }
-    
+
     public async Task<IEnumerable<TVShow>> GetAll()
     {
         return await _context.TVShows.AsNoTracking().ToListAsync();
@@ -33,14 +33,21 @@ public class TVShowRepository : ITVShowRepository
     public async Task<bool> Update(int id, TVShow item)
     {
         var existing = await _context.TVShows.FirstOrDefaultAsync(x => x.Id == id);
-        
+        if (existing == null)
+        {
+            return false;
+        }
+
         existing.Title = item.Title;
         existing.Description = item.Description;
         existing.Genre = item.Genre;
         existing.ImdbRating = item.ImdbRating;
         existing.AmountOfEpisodes = item.AmountOfEpisodes;
         existing.TotalUsersWatched = item.TotalUsersWatched;
-        
+        existing.ReleaseYear = item.ReleaseYear;
+        existing.Status = item.Status;
+        existing.PosterUrl = item.PosterUrl;
+
         var affected = await _context.SaveChangesAsync();
         return affected > 0;
     }

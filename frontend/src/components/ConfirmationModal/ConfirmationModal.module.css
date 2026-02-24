@@ -1,4 +1,4 @@
-.modal-overlay {
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +13,7 @@
     animation: fadeIn 0.2s ease-out;
 }
 
-.modal-content {
+.content {
     background-color: var(--color-surface);
     color: var(--color-text-main);
     border-radius: 12px;
@@ -26,32 +26,32 @@
     animation: popIn 0.2s ease-out forwards;
 }
 
-.modal-header {
+.header {
     margin-bottom: 20px;
 }
 
-.modal-title {
+.title {
     margin: 0 0 8px 0;
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--color-text-main);
 }
 
-.modal-description {
+.description {
     margin: 0;
     font-size: 0.95rem;
     color: var(--color-text-muted);
     line-height: 1.5;
 }
 
-.modal-footer {
+.footer {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     margin-top: 24px;
 }
 
-.modal-btn {
+.btn {
     padding: 8px 16px;
     font-size: 0.9rem;
     cursor: pointer;
@@ -60,33 +60,33 @@
     border: 1px solid transparent;
 }
 
-.modal-btn-cancel {
+.cancel {
     background-color: transparent;
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--color-text-main);
 }
 
-.modal-btn-cancel:hover {
+.cancel:hover {
     background-color: rgba(255, 255, 255, 0.05); /* very light hover */
     color: var(--color-text-main);
 }
 
-.modal-btn-confirm {
+.confirm {
     background-color: var(--color-primary);
     color: var(--color-bg-dark);
     font-weight: 600;
 }
 
-.modal-btn-confirm:hover {
+.confirm:hover {
     background-color: var(--color-secondary); 
 }
 
 /* Variant: destructive */
-.modal-btn-confirm.destructive {
+.destructive {
     background-color: var(--color-danger);
     color: white;
 }
-.modal-btn-confirm.destructive:hover {
+.destructive:hover {
     background-color: #dc2626; /* darker red */
 }
 

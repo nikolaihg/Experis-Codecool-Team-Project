@@ -1,4 +1,4 @@
-import './ConfirmationModal.css';
+import styles from './ConfirmationModal.module.css';
 
 interface ConfirmationModalProps {
     isOpen: boolean;
@@ -24,21 +24,21 @@ export function ConfirmationModal({
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
-                <div className="modal-header">
-                    <h2 className="modal-title">{title}</h2>
-                    <p className="modal-description">{description}</p>
+        <div className={styles.overlay}>
+            <div className={styles.content}>
+                <div className={styles.header}>
+                    <h2 className={styles.title}>{title}</h2>
+                    <p className={styles.description}>{description}</p>
                 </div>
-                <div className="modal-footer">
-                    <button 
-                        className="modal-btn modal-btn-cancel" 
+                <div className={styles.footer}>
+                    <button
+                        className={`${styles.btn} ${styles.cancel}`}
                         onClick={onCancel}
                     >
                         {cancelText}
                     </button>
-                    <button 
-                        className={`modal-btn modal-btn-confirm ${variant}`} 
+                    <button
+                        className={`${styles.btn} ${styles.confirm} ${variant === 'destructive' ? styles.destructive : ''}`}
                         onClick={onConfirm}
                     >
                         {confirmText}
