@@ -12,6 +12,7 @@
 .header-left {
   display: flex;
   gap: 12px;
+  align-items: center;
 }
 
 .nav-pill {
@@ -119,4 +120,39 @@
 
 .logout-btn:hover {
   background-color: rgba(239, 68, 68, 0.1);
+}
+
+.role-badge {
+  text-decoration: none;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+
+.role-admin {
+  background-color: #581c87;
+  color: #e9d5ff;
+}
+
+.role-admin:hover {
+  background-color: #6b21a8; /* Lighter purple on hover */
+  color: white;
+  transform: translateY(-1px);
+}
+
+.role-admin.active {
+  background-color: var(--color-primary); /* Match nav-pill active color */
+  color: var(--color-bg-dark);
+  border-color: var(--color-primary);
+  transform: none; /* Don't float when active */
+}
+
+.role-user {
+  background-color: rgba(6, 78, 59, 0.5);
+  color: #a7f3d0;
+  cursor: default;
 }

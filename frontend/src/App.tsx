@@ -9,6 +9,7 @@ import WatchList from './pages/WatchList'
 import Login from './pages/login'
 import Register from './pages/register'
 import { RequireAuth } from './auth/RequireAuth'
+import { RequireAdmin } from './auth/RequireAdmin'
 import NotFoundPage from './pages/NotFoundPage'
 import AdminPage from './pages/AdminPage'
 
@@ -26,6 +27,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/watchlist" element={<WatchList />} />
+          </Route>
+
+          <Route element={<RequireAdmin />}>
             <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Routes>
