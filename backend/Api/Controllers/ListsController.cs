@@ -139,6 +139,15 @@ public class ListsController : ControllerBase
 
         return NoContent();
     }
+    
+    [HttpGet("{id}/items/{itemId}")]
+    public async Task<ActionResult<UserShowEntry>> GetById(int itemId)
+    {
+        var item = await _userShowEntryRepository.Read(itemId);
+        if (item == null)
+            return NotFound();
+        return Ok(item);
+    }
 
     [HttpPost("{id}/items")]
     public async Task<IActionResult> AddItem(int id, [FromBody] CreateListEntryDto itemDto)
@@ -163,6 +172,24 @@ public class ListsController : ControllerBase
         await _userShowEntryRepository.Create(entry);
         
         return Ok(entry);
+    }
+
+    [HttpPut("{id}/items/{itemId}")]
+    public async Task<IActionResult> UpdateItem(int itemId, [FromBody] UpdateListEntryDto dto)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var existingItem = await _userShowEntryRepository.Read(itemId);
+        if (existingItem == null) return NotFound();
+
+        if (dto.Status.HasValue) existingItem.Status = dto.Status.Value;
+        if (dto.Rating.HasValue) existingItem.Rating = dto.Rating.Value;
+
+        var success = await _userShowEntryRepository.Update(itemId, existingItem);
+        if (!success) return StatusCode(500, "Failed to update item");
+
+        return NoContent();
     }
 
     [HttpDelete("{id}/items/{itemId}")]

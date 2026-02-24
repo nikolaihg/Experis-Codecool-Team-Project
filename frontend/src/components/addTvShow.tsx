@@ -10,7 +10,7 @@ import { addTvShowToList } from "../services/api/tvshows.api";
 
 type AddTvShowProps = {
   tvShow?: TVShowOption | null;
-  onAdd?: (payload: AddTvShowPayload) => Promise<void> | void;
+  onAdd: () => void;
 };
 
 const defaultForm: FormState = {
@@ -20,7 +20,7 @@ const defaultForm: FormState = {
 	rating: "",
 };
 
-export function AddTvShow({ tvShow }: AddTvShowProps) {
+export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 	const [form, setForm] = useState<FormState>(defaultForm);
 	const [error, setError] = useState<string>("");
 	const [success, setSuccess] = useState<string>("");
@@ -123,6 +123,7 @@ export function AddTvShow({ tvShow }: AddTvShowProps) {
 			setIsSubmitting(true);
 			if(userId){
 				await addTvShowToList(Number(payload.userListId), payload.tvShowId.toString(), Number(payload.status), payload.rating);
+				onAdd();
 				setSuccess("Added to list.");
 				setForm(defaultForm);
 				setSelectedShow(null);

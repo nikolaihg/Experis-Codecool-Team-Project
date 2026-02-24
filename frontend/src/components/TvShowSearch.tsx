@@ -11,6 +11,7 @@ export default function TvShowSearch({ onSelect } : TvShowSearchProps) {
   const [results, setResults] = useState<TVShow[]>([]);
   const [showList, setShowList] = useState<boolean>(false);
   const [debounced, setDebounced] = useState(query);
+  const [userTyping, setUserTyping] = useState<boolean>(false);
   const { token } = useAuth()
 
 
@@ -21,6 +22,12 @@ export default function TvShowSearch({ onSelect } : TvShowSearchProps) {
 
   useEffect(() => {
     const search = async () => {
+      
+      if (!userTyping) {
+        setShowList(false);
+        return;
+      }
+
       if (debounced.length < 2) {
         setResults([]);
         setShowList(false);
@@ -43,10 +50,17 @@ export default function TvShowSearch({ onSelect } : TvShowSearchProps) {
     };
 
     search();
-  }, [debounced]);
+  }, [debounced, userTyping]);
+
+  const handleChange = (value: string) => {
+    setUserTyping(true);
+    setQuery(value);
+  }
 
   const handleSelect = (show: TVShow) => {
+    setUserTyping(false); 
     setQuery(show.title);
+    setResults([]);
     setShowList(false);
     onSelect?.(show);
   };
@@ -58,8 +72,8 @@ export default function TvShowSearch({ onSelect } : TvShowSearchProps) {
         type="search"
         placeholder="Search TV show..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => results.length > 0 && setShowList(true)}
+        onChange={(e) => handleChange(e.target.value)}
+        onFocus={() => { if (userTyping && results.length > 0) setShowList(true); }}
       />
 
       {showList && results.length > 0 && (
@@ -69,6 +83,7 @@ export default function TvShowSearch({ onSelect } : TvShowSearchProps) {
             top: "100%",
             left: 0,
             right: 0,
+            backgroundColor: "black",
             border: "1px solid #ddd",
             borderRadius: 4,
             marginTop: 4,

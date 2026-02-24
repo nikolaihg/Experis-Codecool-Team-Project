@@ -34,32 +34,9 @@ const Home: React.FC = () => {
     }
   }
 
-  async function DeleteEntry(userListId: number, entryId: number) {
-    if (!token) return
-    let res: Response
-    try {
-      res = await fetch(`/api/lists/${userListId}/items/${entryId}`,
-        {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-    } catch {
-      console.error("Network error");
-      return;
-    }
-
-    if (res.status === 204) {
-      await fetchDiary()
-      return
-    }
-
-    const message = await res.text();
-    if (!res.ok) {
-      console.error("Delete failed:", message || "Unknown error");
-      return;
-    }
+  async function onChange() {
+    await fetchDiary()
   }
-
 
   return (
     <div className="page-container" style={{ maxWidth: 500 }}>
@@ -67,7 +44,7 @@ const Home: React.FC = () => {
       {diaryEntryList.length === 0 ?
         <p>No diary entries yet. Add your first show!</p>
         :
-        diaryEntryList.map(e => <TVShowCard key={e.id} entry={e} onDelete={DeleteEntry} />)
+        diaryEntryList.map(e => <TVShowCard key={e.id} entry={e} onChange={onChange} />)
       }
 
       <button className={styles.button} onClick={() => setAdding(!adding)}>
@@ -84,7 +61,7 @@ const Home: React.FC = () => {
               >
                 ×
               </button>
-              <AddTvShow />
+              <AddTvShow onAdd={onChange} />
             </div>
           </div>
         ) : null}
