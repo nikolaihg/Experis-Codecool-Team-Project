@@ -70,6 +70,27 @@ public class ListsControllerTests
     }
 
     [Test]
+    public async Task RemoveItem_WhenItemNotInList_ReturnsNotFound()
+    {
+        SetUser("u1");
+        _listRepo.Setup(x => x.Read(5)).ReturnsAsync(new UserList
+        {
+            Id = 5,
+            Name = "List",
+            UserId = "u1",
+            IsPublic = false,
+            UserShowEntryList = new List<UserShowEntry>
+            {
+                new() { Id = 100, TVShowId = 10 }
+            }
+        });
+
+        var result = await _sut.RemoveItem(5, 999);
+
+        Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+    }
+
+    [Test]
     public async Task CreateList_WithItems_DefaultsNullRatingToZero()
     {
         SetUser("u1");

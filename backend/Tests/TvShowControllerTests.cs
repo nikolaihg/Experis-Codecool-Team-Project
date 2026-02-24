@@ -52,4 +52,21 @@ public class TVShowControllerTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.Value, Is.AssignableTo<Array>());
     }
+
+    [Test]
+    public async Task Search_WhenValidQuery_ReturnsOkWithRepoResults()
+    {
+        var shows = new List<TVShow>
+    {
+        new TVShow { Id = 1, Title = "Breaking Bad", Description = "Crime drama", ReleaseYear = 2008 }
+    };
+    _repo.Setup(x => x.Search("breaking")).ReturnsAsync(shows);
+
+    var result = await _sut.Search("breaking") as OkObjectResult;
+
+    Assert.That(result, Is.Not.Null);
+    Assert.That(result!.Value, Is.AssignableTo<IEnumerable<TVShow>>());
+    Assert.That(((IEnumerable<TVShow>)result!.Value!).Count(), Is.EqualTo(1));
+    _repo.Verify(x => x.Search("breaking"), Times.Once);
+    }
 }
