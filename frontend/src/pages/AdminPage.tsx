@@ -10,7 +10,7 @@ import "./AdminPage.css"
 
 const AdminPage = () => {
     const { token } = useAuth()
-    const [activeView, setActiveView] = useState<'claims' | 'tvshows' | 'users'>('claims')
+    const [activeView, setActiveView] = useState<'claims' | 'tvshows' | 'users'>('tvshows')
 
     const claims: JwtClaims | null = token ? decodeToken(token) : null
 
