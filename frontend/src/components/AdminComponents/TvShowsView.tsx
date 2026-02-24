@@ -4,7 +4,7 @@ import { getAllTvShows, deleteTvShow } from "../../services/api/tvshows.api";
 import "./TvShowsView.css";
 import { getStatusLabel } from "../../services/utils/tvshowUtil";
 import { ConfirmationModal } from "../ConfirmationModal/ConfirmationModal";
-import { EditTvShowModal } from "./EditTvShowModal";
+import { TvShowModal } from "./TvShowModal";
 
 export function TvShowsView() {
     const [tvShows, setTvShows] = useState<TVShow[]>([]);
@@ -12,6 +12,7 @@ export function TvShowsView() {
     const [error, setError] = useState<string | null>(null);
     const [showToDelete, setShowToDelete] = useState<string | null>(null);
     const [showToEdit, setShowToEdit] = useState<TVShow | null>(null);
+    const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
         loadTvShows();
@@ -43,13 +44,6 @@ export function TvShowsView() {
         } finally {
             setShowToDelete(null);
         }
-    }
-
-    function handleSaveEdit(updatedShow: TVShow) {
-        setTvShows((prev) => 
-            prev.map((show) => show.id === updatedShow.id ? updatedShow : show)
-        );
-        setShowToEdit(null);
     }
 
     if (loading) return <div>Loading...</div>;
@@ -103,11 +97,24 @@ export function TvShowsView() {
                 </table>
             </div>
 
-            <EditTvShowModal
+            <div className="create-tvshow-container">
+                <button className="create-tvshow-btn" onClick={() => setIsCreating(true)}>Create New TV Show</button>
+            </div>
+
+            <TvShowModal
+                isOpen={isCreating}
+                onClose={() => setIsCreating(false)}
+                onSave={loadTvShows}
+            />
+
+            <TvShowModal
                 isOpen={!!showToEdit}
                 tvShow={showToEdit}
                 onClose={() => setShowToEdit(null)}
-                onSave={handleSaveEdit}
+                onSave={() => {
+                    loadTvShows();
+                    setShowToEdit(null);
+                }}
             />
 
             <ConfirmationModal 

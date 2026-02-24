@@ -1,35 +1,50 @@
 import { useState, useEffect } from "react";
 import type { TVShow } from "../../types";
-import { updateTvShow } from "../../services/api/tvshows.api";
-import styles from "./EditTvShowModal.module.css";
+import { createTvShow, updateTvShow } from "../../services/api/tvshows.api";
+import styles from "./TvShowModal.module.css";
 
-interface EditTvShowModalProps {
+interface TvShowModalProps {
     isOpen: boolean;
-    tvShow: TVShow | null;
+    tvShow?: TVShow | null; // If provided, we are editing. If null/undefined, we are creating.
     onClose: () => void;
-    onSave: (updatedShow: TVShow) => void;
+    onSave: () => void;
 }
 
-export function EditTvShowModal({ isOpen, tvShow, onClose, onSave }: EditTvShowModalProps) {
-    const [formData, setFormData] = useState<TVShow | null>(null);
+const DEFAULT_TV_SHOW: Omit<TVShow, "id"> = {
+    title: "",
+    description: "",
+    genre: "",
+    releaseYear: new Date().getFullYear(),
+    status: 0,
+    amountOfEpisodes: 0,
+    imdbRating: 0,
+    posterUrl: ""
+};
+
+export function TvShowModal({ isOpen, tvShow, onClose, onSave }: TvShowModalProps) {
+    const [formData, setFormData] = useState<Omit<TVShow, "id"> & { id?: string }>(DEFAULT_TV_SHOW);
+    
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const isEditing = !!tvShow;
+
     useEffect(() => {
-        if (tvShow) {
-            setFormData({ ...tvShow });
+        if (isOpen) {
+            if (tvShow) {
+                setFormData({ ...tvShow });
+            } else {
+                setFormData(DEFAULT_TV_SHOW);
+            }
             setError(null);
         }
-    }, [tvShow, isOpen]);
+    }, [isOpen, tvShow]);
 
-    if (!isOpen || !formData) return null;
+    if (!isOpen) return null;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => {
-            if (!prev) return null;
-            
-            // Handle number fields
             if (["releaseYear", "amountOfEpisodes", "status"].includes(name)) {
                 return { ...prev, [name]: parseInt(value) || 0 };
             }
@@ -43,18 +58,21 @@ export function EditTvShowModal({ isOpen, tvShow, onClose, onSave }: EditTvShowM
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData) return;
-
         setLoading(true);
         setError(null);
 
         try {
-            await updateTvShow(formData.id, formData);
-            onSave(formData);
+            if (isEditing && formData.id) {
+                await updateTvShow(formData.id, formData as TVShow);
+            } else {
+                const { ...createData } = formData; 
+                await createTvShow(createData);
+            }
+            onSave();
             onClose();
         } catch (err) {
-            console.error("Failed to update TV show", err);
-            setError("Failed to update TV show. Please try again.");
+            console.error(isEditing ? "Failed to update TV show" : "Failed to create TV show", err);
+            setError(isEditing ? "Failed to update TV show. Please try again." : "Failed to create TV show. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -67,6 +85,10 @@ export function EditTvShowModal({ isOpen, tvShow, onClose, onSave }: EditTvShowM
                 {error && <div className={styles.error}>{error}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
+                    <h2 style={{ marginBottom: "1rem", color: "var(--color-text-main)" }}>
+                        {isEditing ? "Edit TV Show" : "Create New TV Show"}
+                    </h2>
+
                     <div className={styles.field}>
                         <label className={styles.label}>Title</label>
                         <input
