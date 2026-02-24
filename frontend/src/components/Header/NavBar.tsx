@@ -8,7 +8,10 @@ export function NavBar() {
   const role = decodedToken?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
   // jwt role claim is array if user is admin ["User", "Admin"] or "user" if only regular user.
-  const isAdmin = Array.isArray(role) && role.includes("Admin");
+  const isAdmin = Array.isArray(role) 
+    ? role.includes("Admin") 
+    : role === "Admin";
+    
   const displayRole = isAdmin ? "Admin" : (Array.isArray(role) ? role[0] : role);
 
   return (
