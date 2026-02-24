@@ -1,27 +1,28 @@
-import { Link } from 'react-router-dom'
+import { useAuth } from "../auth/AuthContext"
+import { decodeToken } from "../services/utils/jwt"
+import type { JwtClaims } from "../types"
 
-function AdminPage() {
-  return (
-    <div style={{ textAlign: 'center', padding: '2rem' }}>
-      <h1>404 - Page Not Found</h1>
-      <p>The page you are looking for does not exist.</p>
-      <img 
-        src="/notfound.jpg" 
-        alt="not found image" 
-        style={{ 
-          maxWidth: '100%', 
-          maxHeight: '400px', 
-          borderRadius: '12px', 
-          boxShadow: 'var(--shadow-card)',
-          margin: '2rem auto',
-          display: 'block'
-        }} 
-      />
-      <Link to="/" style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}>
-        Go back to Home
-      </Link>
-    </div>
-  )
+const AdminPage = () => {
+    const { token } = useAuth()
+    const claims: JwtClaims | null = token ? decodeToken(token) : null
+
+    if (!claims) {
+        return <div style={{ color: "var(--color-text-main)", padding: "2rem" }}>No valid token found or not logged in.</div>
+    }
+
+    return (
+        <div style={{ color: "var(--color-text-main)", padding: "2rem" }}>
+            <h1 style={{ color: "var(--color-primary)" }}>User Claims</h1>
+            <ul style={{ listStyle: "none", padding: 0 }}>
+                {Object.entries(claims).map(([key, value]) => (
+                    <li key={key} style={{ marginBottom: "0.5rem", background: "var(--color-surface)", padding: "0.5rem", borderRadius: "4px" }}>
+                        <strong style={{ color: "var(--color-secondary)", wordBreak: "break-all" }}>{key}:</strong>
+                        <span style={{ wordBreak: "break-all", marginLeft: "0.5rem" }}>{String(value)}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
 }
 
 export default AdminPage

@@ -1,11 +1,12 @@
 import { useMemo, useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./addTvShow.module.css";
-import { getUserLists, addTvShowToList } from "../services/api";
 import { useAuth } from "../auth/AuthContext"
 import TvShowSearch from "./TvShowSearch";
 import type { TVShow } from "../types";
 import type { FormState, TVShowOption, UserListOption, AddTvShowPayload } from "../types";
+import { getUserLists } from "../services/api/lists.api";
+import { addTvShowToList } from "../services/api/tvshows.api";
 
 type AddTvShowProps = {
   tvShow?: TVShowOption | null;
