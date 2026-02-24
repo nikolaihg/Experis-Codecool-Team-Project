@@ -36,14 +36,6 @@ public class UserShowEntryRepository : IUserShowEntryRepository
         
         existing.Status = item.Status;
         existing.Rating = item.Rating;
-        existing.LoggedAt = item.LoggedAt;
-        existing.Position = item.Position;
-        
-        existing.UserListId = item.UserListId;
-        existing.UserList =  item.UserList;
-        
-        existing.TVShowId = item.TVShowId;
-        existing.TVShow = item.TVShow;
         
         var affected = await _context.SaveChangesAsync();
         return affected > 0;

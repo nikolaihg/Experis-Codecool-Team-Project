@@ -12,3 +12,9 @@ public class UpdateUserListDto
 
     public bool? IsPublic { get; set; }
 }
+
+public class UpdateListEntryDto 
+{
+    public UserWatchStatus? Status { get; set; }
+    public int? Rating { get; set; }
+}
