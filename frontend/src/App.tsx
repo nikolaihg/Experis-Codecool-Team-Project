@@ -9,7 +9,12 @@ import WatchListsPage from './pages/WatchListsPage'
 import Login from './pages/login'
 import Register from './pages/register'
 import { RequireAuth } from './auth/RequireAuth'
+import { RequireAdmin } from './auth/RequireAdmin'
+import Profile from './pages/Profile' 
+import { ProfileMenu } from './components/Header/ProfileMenu'
+
 import NotFoundPage from './pages/NotFoundPage'
+import AdminPage from './pages/AdminPage'
 
 function App() {
   return (
@@ -25,6 +30,12 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/watchlist" element={<WatchListsPage />} />
+            <Route path="/profilemenu" element={<ProfileMenu />} />
+            <Route path="/profile" element={<Profile />} /> 
+          </Route>
+
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Routes>
       </main>
