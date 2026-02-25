@@ -3,6 +3,7 @@
     <Project Path="Api/Api.csproj" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="IntegrationTests/IntegrationTests.csproj" />
     <Project Path="Tests/Tests.csproj" />
   </Folder>
 </Solution>

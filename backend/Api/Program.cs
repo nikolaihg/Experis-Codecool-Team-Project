@@ -113,7 +113,12 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    await DbSeeder.SeedAsync(db, userManager, roleManager);
+    if (db.Database.IsRelational())
+    {
+        await DbSeeder.SeedAsync(db, userManager, roleManager);
+    }
 }
 
 app.Run();
+
+public partial class Program { }
