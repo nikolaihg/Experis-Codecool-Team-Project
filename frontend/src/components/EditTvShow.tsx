@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import styles from "./addTvShow.module.css";
+import styles from "./AddTvShow.module.css";
 import type { UserShowEntry } from "../types";
 import { useAuth } from "../auth/AuthContext";
 
