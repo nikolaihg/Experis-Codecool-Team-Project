@@ -21,6 +21,16 @@ export type UserShowEntry = {
   userListId: number
 }
 
+export type UserList = {
+  id: number,
+  name: string,
+  isPublic: boolean,
+  createdAt: string,
+  updatedAt: string,
+  userId: string,
+  userShowEntryList: UserShowEntry[]
+}
+
 export type UserListOption = {
   id: number;
   name: string;

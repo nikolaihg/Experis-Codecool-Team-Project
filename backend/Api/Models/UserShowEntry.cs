@@ -8,7 +8,7 @@ public class UserShowEntry
 
     public UserWatchStatus Status { get; set; }
 
-    [Range(1, 6)]
+    [Range(1, 10)]
     public int? Rating { get; set; }
 
     public DateTime LoggedAt { get; set; }

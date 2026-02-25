@@ -9,7 +9,7 @@ import { ProfileMenu } from './components/Header/ProfileMenu'
 
 import Home from './pages/Home'
 import About from './pages/About'
-import WatchList from './pages/WatchList'
+import WatchListsPage from './pages/WatchListsPage'
 import Login from './pages/login'
 import Register from './pages/register'
 import Profile from './pages/Profile'
@@ -29,7 +29,7 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/watchlist" element={<WatchList />} />
+            <Route path="/watchlist" element={<WatchListsPage />} />
             <Route path="/profilemenu" element={<ProfileMenu />} />
             <Route path="/profile" element={<Profile />} />
           </Route>

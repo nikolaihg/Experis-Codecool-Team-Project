@@ -1,13 +1,9 @@
 import "./Header.css";
 import { NavBar } from "./NavBar";
-import { SearchBar } from "./SearchBar";
 import { ProfileMenu } from "./ProfileMenu";
 
-type HeaderProps = {
-  onSearch?: (value: string) => void;
-};
 
-export function Header({ onSearch }: HeaderProps) {
+export function Header() {
   return (
     <header className="app-header">
       <NavBar />
@@ -17,7 +13,6 @@ export function Header({ onSearch }: HeaderProps) {
       </div>
 
       <div className="header-right">
-        <SearchBar onSearch={onSearch} />
         <ProfileMenu />
       </div>
     </header>

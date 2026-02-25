@@ -17,3 +17,25 @@ export async function getUserLists(): Promise<Array<{ id: number; name: string }
 
   return response.json();
 }
+
+
+export async function deleteList(id: number, token: string): Promise<boolean> {
+    try {
+        const res = await fetch(`/api/lists/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if (res.status === 204) return true; 
+
+        const message = await res.text();
+        console.error("Failed to delete list:", message);
+        return false;
+
+    } catch (err) {
+        console.error("Network error while deleting list");
+        return false;
+    }
+}
