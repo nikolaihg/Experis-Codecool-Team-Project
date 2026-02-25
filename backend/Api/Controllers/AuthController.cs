@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
     {
         var user = new User
         {
-            UserName = dto.Email,
+            UserName = dto.Username,
             Email = dto.Email,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
