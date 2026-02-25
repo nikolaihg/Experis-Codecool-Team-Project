@@ -9,7 +9,7 @@ import WatchList from './pages/WatchList'
 import Login from './pages/login'
 import Register from './pages/register'
 import { RequireAuth } from './auth/RequireAuth'
-import Profile from './pages/Profile' 
+import { Profile } from './pages/Profile' 
 import { ProfileMenu } from './components/Header/ProfileMenu'
 
 import NotFoundPage from './pages/NotFoundPage'

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { LoadingComponent } from "../components/Loading/Loading";
+import { useDelayedSpinner } from "../hooks/useDelayedSpinner";
 
 type UserProfile = {
   id: string;
@@ -11,23 +13,25 @@ type UserProfile = {
   isActive: boolean;
 };
 
-export default function Profile() {
+export function Profile() {
   const navigate = useNavigate();
   const { token, user, isAuthenticated } = useAuth();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const showSpinner = useDelayedSpinner(loading);
 
   useEffect(() => {
-    if (!token || !user?.id) {
-      setLoading(false);
-      return;
-    }
+    if (!token || !user?.id) return;
+
+    let isActive = true;
 
     async function fetchProfile() {
+      setLoading(true);
+      setError(null);
+
       try {
-        setError(null);
         const res = await fetch(`/api/User/${user?.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -37,15 +41,19 @@ export default function Profile() {
         if (!res.ok) throw new Error("Could not fetch profile");
 
         const data: UserProfile = await res.json();
-        setProfile(data);
+        if (isActive) setProfile(data);
       } catch {
-        setError("Something went wrong when loading the profile.");
+        if (isActive) setError("Something went wrong when loading the profile.");
       } finally {
-        setLoading(false);
+        if (isActive) setLoading(false);
       }
     }
 
     fetchProfile();
+
+    return () => {
+      isActive = false;
+    };
   }, [token, user?.id]);
 
   const avatarSrc = useMemo(() => {
@@ -64,6 +72,12 @@ export default function Profile() {
     );
   }
 
+  if (loading && showSpinner) return <LoadingComponent />;
+  if (error) return <p style={{ color: "crimson" }}>{error}</p>;
+  if (loading && !showSpinner) return null;
+
+  if (!profile) return <p>No profile found.</p>;
+
   return (
     <div style={{ padding: 24, maxWidth: 720 }}>
       <div
@@ -77,36 +91,18 @@ export default function Profile() {
         {avatarSrc && (
           <div className="profile-avatar-box">
             <img src={avatarSrc} alt="Profile avatar" className="profile-avatar" />
-            </div>
-          )}
-
+          </div>
+        )}
         <h1 style={{ margin: 0 }}>Profile</h1>
       </div>
 
-      {loading && <p>Loading profile…</p>}
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
-
-    {profile && (
       <div className="profile-card">
-          <p>
-            <strong>Username:</strong> {profile.userName}
-          </p>
-          <p>
-            <strong>Email:</strong> {profile.email}
-          </p>
-          <p>
-            <strong>Status:</strong> {profile.isActive ? "Active" : "Inactive"}
-          </p>
-          <p>
-            <strong>Created:</strong>{" "}
-            {new Date(profile.createdAt).toLocaleString()}
-          </p>
-          <p>
-            <strong>Updated:</strong>{" "}
-            {new Date(profile.updatedAt).toLocaleString()}
-          </p>
-        </div>
-      )}
+        <p><strong>Username:</strong> {profile.userName}</p>
+        <p><strong>Email:</strong> {profile.email}</p>
+        <p><strong>Status:</strong> {profile.isActive ? "Active" : "Inactive"}</p>
+        <p><strong>Created:</strong> {new Date(profile.createdAt).toLocaleString()}</p>
+        <p><strong>Updated:</strong> {new Date(profile.updatedAt).toLocaleString()}</p>
+      </div>
     </div>
   );
 }
