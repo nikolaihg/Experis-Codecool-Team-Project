@@ -169,7 +169,7 @@ public class ListsController : ControllerBase
             UserListId = id,
             TVShowId = itemDto.TvShowId,
             Status = itemDto.Status,
-            Rating = itemDto.Rating ?? 0,
+            Rating = itemDto.Rating ?? 1,
             LoggedAt = DateTime.UtcNow
         };
 

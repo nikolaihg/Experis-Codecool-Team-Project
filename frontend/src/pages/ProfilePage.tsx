@@ -13,7 +13,7 @@ type UserProfile = {
   isActive: boolean;
 };
 
-export function Profile() {
+function ProfilePage() {
   const navigate = useNavigate();
   const { token, user, isAuthenticated } = useAuth();
 
@@ -106,3 +106,5 @@ export function Profile() {
     </div>
   );
 }
+
+export default ProfilePage;

@@ -2,13 +2,18 @@ import React from "react";
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { LoadingComponent } from "../components/Loading/Loading";
+import { useDelayedSpinner } from "../hooks/useDelayedSpinner";
 
 
-const Register: React.FC = () => {
+function RegisterPage(){
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const showSpinner = useDelayedSpinner(loading);
   const { register } = useAuth()
   const navigate = useNavigate()
 
@@ -38,19 +43,30 @@ const Register: React.FC = () => {
     e.preventDefault(); // stops page refresh
     const errors = validatePassword(password);
     setPasswordErrors(errors);
+    setServerError(null);
 
     if (errors.length > 0) {
       return;
     }
     console.log("Registering with:", { username, password });
-    // Here you'll call your registration API later
+    setLoading(true)
     try {
       await register(username, email, password)
+      navigate("/")
     } catch(err){
+      if (err instanceof Error) {
+        setServerError(err.message);
+      } else {
+        setServerError("Registration failed. Please try again.");
+      }
       console.log(err)
+    } finally {
+      setLoading(false)
     }
-    navigate("/")
   };
+
+  if (loading && showSpinner) return <LoadingComponent />;
+  if (loading && !showSpinner) return null;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -89,7 +105,7 @@ const Register: React.FC = () => {
           }}
           autoComplete="new-password"
           minLength={8}
-          pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>]).{8,}"
+          pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*\(\),.?:\{\}\|<>]).{8,}"
           title="Password must be at least 8 characters and include one capital letter, one number, and one special character."
         />
         {passwordErrors.length > 0 && (
@@ -102,6 +118,16 @@ const Register: React.FC = () => {
       </div>
 
       <button type="submit">Register</button>
+      {serverError && (
+        <p style={{ 
+          color: "red", 
+          marginTop: "10px",
+          textAlign: "center",
+          whiteSpace: "pre-wrap"
+        }}>
+          {serverError}
+        </p>
+      )}
       
       <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
         <p style={{ margin: '0 0 0.25rem', fontSize: '0.9em', color: 'var(--color-text-muted)' }}>
@@ -119,4 +145,4 @@ const Register: React.FC = () => {
   );
 }
 
-export default Register;
+export default RegisterPage;
