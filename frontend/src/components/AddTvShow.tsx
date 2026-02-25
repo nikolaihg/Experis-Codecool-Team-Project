@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import styles from "./addTvShow.module.css";
+import styles from "./AddTvShow.module.css";
 import { useAuth } from "../auth/AuthContext"
 import TvShowSearch from "./TvShowSearch";
 import type { TVShow } from "../types";

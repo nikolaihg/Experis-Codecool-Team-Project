@@ -1,6 +1,6 @@
 import { useState } from "react"
-import styles from "../components/addTvShow.module.css"
-import { AddTvShow } from "./addTvShow.tsx"
+import styles from "../components/AddTvShow.module.css"
+import { AddTvShow } from "./AddTvShow"
 
 type AddTvShowButtonProps = {
     onChange: () => void
