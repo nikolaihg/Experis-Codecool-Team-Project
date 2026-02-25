@@ -12,7 +12,8 @@ import About from './pages/About'
 import WatchListsPage from './pages/WatchListsPage'
 import Login from './pages/login'
 import Register from './pages/register'
-import Profile from './pages/Profile'
+import { Profile } from './pages/Profile' 
+
 import NotFoundPage from './pages/NotFoundPage'
 import AdminPage from './pages/AdminPage'
 
