@@ -34,6 +34,9 @@ export async function addTvShowToList(
 
   if (!response.ok) {
     const errorData = await response.text();
+        if (response.status === 409) {
+            throw new Error("TV show is already in this list.");
+        }
     throw new Error(`Failed to add TV show: ${response.status} ${errorData}`);
   }
 

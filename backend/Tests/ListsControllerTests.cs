@@ -126,4 +126,29 @@ public class ListsControllerTests
 
         Assert.That(result, Is.TypeOf<NotFoundResult>());
     }
+
+    [Test]
+    public async Task AddItem_WhenTvShowAlreadyInList_ReturnsConflict()
+    {
+        SetUser("u1");
+        _listRepo.Setup(x => x.Read(5)).ReturnsAsync(new UserList
+        {
+            Id = 5,
+            Name = "List",
+            UserId = "u1",
+            IsPublic = false
+        });
+        _entryRepo.Setup(x => x.ExistsInList(5, 10)).ReturnsAsync(true);
+
+        var dto = new CreateListEntryDto
+        {
+            TvShowId = 10,
+            Status = UserWatchStatus.Planning,
+            Rating = 8
+        };
+
+        var result = await _sut.AddItem(5, dto);
+
+        Assert.That(result, Is.TypeOf<ConflictObjectResult>());
+    }
 }
