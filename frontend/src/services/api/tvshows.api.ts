@@ -1,3 +1,5 @@
+import type { TVShow } from "../../types";
+
 export async function addTvShowToList(
   listId: number,
   tvShowId: string,
@@ -41,4 +43,115 @@ export async function addTvShowToList(
 
   return response.json();
 }
+
+export async function getAllTvShows(): Promise<TVShow[]> {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+        throw new Error("No auth token found");
+    }
+
+    const response = await fetch(`api/TVShow`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`Failed to fetch TV shows: ${response.status} ${errorData}`);
+    }
+
+    const data = await response.json();
+    // Ensure ids are strings as per frontend type
+    return data.map((show: any) => ({
+      ...show,
+      id: String(show.id),
+      status: Number(show.status),
+      releaseYear: Number(show.releaseYear),
+      imdbRating: Number(show.imdbRating),
+      amountOfEpisodes: Number(show.amountOfEpisodes)
+    }));
+}
+
+export async function createTvShow(tvShow: Omit<TVShow, "id">): Promise<void> {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+        throw new Error("No auth token found");
+    }
+
+    const payload = {
+        ...tvShow,
+        status: Number(tvShow.status),
+        imdbRating: Number(tvShow.imdbRating),
+        releaseYear: Number(tvShow.releaseYear),
+        amountOfEpisodes: Number(tvShow.amountOfEpisodes)
+    };
+
+    const response = await fetch(`api/TVShow`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Failed to create TV show: ${error}`);
+    }
+}
+
+export async function updateTvShow(id: string, tvShow: TVShow): Promise<void> {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+        throw new Error("No auth token found");
+    }
+
+    const payload = {
+        ...tvShow,
+        id: Number(tvShow.id),
+        status: Number(tvShow.status),
+        imdbRating: Number(tvShow.imdbRating),
+        releaseYear: Number(tvShow.releaseYear),
+        amountOfEpisodes: Number(tvShow.amountOfEpisodes)
+    };
+
+    const response = await fetch(`api/TVShow/${Number(id)}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Failed to update TV show: ${error}`);
+    }
+}
+
+export async function deleteTvShow(id: string): Promise<void> {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+        throw new Error("No auth token found");
+    }
+
+    const response = await fetch(`api/TVShow/${Number(id)}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Failed to delete TV show: ${error}`);
+    }
+}
+
 
