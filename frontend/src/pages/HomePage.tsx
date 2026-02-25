@@ -3,11 +3,15 @@ import { TVShowCard } from "../components/TVShowCard";
 import { useAuth } from "../auth/AuthContext";
 import type { UserShowEntry } from "../types";
 import { AddTvShowButton } from "../components/AddTvShowButton";
+import { LoadingComponent } from "../components/Loading/Loading";
+import { useDelayedSpinner } from "../hooks/useDelayedSpinner";
 
 
 function HomePage() {
   const { token } = useAuth()
   const [diaryEntryList, setDiaryEntryList] = useState<UserShowEntry[]>([])
+  const [loading, setLoading] = useState(false);
+  const showSpinner = useDelayedSpinner(loading);
 
 
   useEffect(() => {
@@ -17,6 +21,7 @@ function HomePage() {
 
   async function fetchDiary() {
     if (!token) return
+    setLoading(true);
     try {
       const response = await fetch(`/api/lists`, {
         method: 'GET',
@@ -29,12 +34,17 @@ function HomePage() {
       console.log(diaryList)
     } catch (err) {
       if (err instanceof Error) console.log(err.message)
+    } finally {
+      setLoading(false)
     }
   }
 
   async function onChange() {
     await fetchDiary()
   }
+
+  if (loading && showSpinner) return <LoadingComponent />;
+  if (loading && !showSpinner) return null;
 
   return (
     <div className="page-container" style={{ maxWidth: 500 }}>

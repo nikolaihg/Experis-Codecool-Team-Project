@@ -4,11 +4,15 @@ import type { UserList } from "../types";
 import { WatchListCard } from "../components/WatchListCard";
 import { AddTvShowButton } from "../components/AddTvShowButton";
 import styles from "./WatchListsPage.module.css";
+import { LoadingComponent } from "../components/Loading/Loading";
+import { useDelayedSpinner } from "../hooks/useDelayedSpinner";
 
 function WatchListsPage() {
   const { token } = useAuth();
   const [watchLists, setWatchLists] = useState<UserList[]>([]);
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const showSpinner = useDelayedSpinner(loading);
 
   useEffect(() => {
     fetchWatchLists();
@@ -16,6 +20,7 @@ function WatchListsPage() {
 
   async function fetchWatchLists() {
     if (!token) return;
+    setLoading(true);
     try {
       const response = await fetch(`/api/lists`, {
         method: 'GET',
@@ -30,6 +35,8 @@ function WatchListsPage() {
 
     } catch (err) {
       if (err instanceof Error) console.log(err.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -72,6 +79,9 @@ function WatchListsPage() {
       if (err instanceof Error) console.log(err.message);
     }
   }
+
+  if (loading && showSpinner) return <LoadingComponent />;
+  if (loading && !showSpinner) return null;
 
   return (
     <div className={styles.container}>

@@ -5,6 +5,8 @@ import "./TvShowsView.css";
 import { getStatusLabel } from "../../services/utils/tvshowUtil";
 import { ConfirmationModal } from "../ConfirmationModal/ConfirmationModal";
 import { TvShowModal } from "./TvShowModal";
+import { useDelayedSpinner } from "../../hooks/useDelayedSpinner";
+import { LoadingComponent } from "../Loading/Loading";
 
 export function TvShowsView() {
     const [tvShows, setTvShows] = useState<TVShow[]>([]);
@@ -13,6 +15,7 @@ export function TvShowsView() {
     const [showToDelete, setShowToDelete] = useState<string | null>(null);
     const [showToEdit, setShowToEdit] = useState<TVShow | null>(null);
     const [isCreating, setIsCreating] = useState(false);
+    const showSpinner = useDelayedSpinner(loading);
 
     useEffect(() => {
         loadTvShows();
@@ -46,8 +49,9 @@ export function TvShowsView() {
         }
     }
 
-    if (loading) return <div>Loading...</div>;
+    if (loading && showSpinner) return <LoadingComponent />;
     if (error) return <div className="error-message">{error}</div>;
+    if (loading && !showSpinner) return null;
 
     return (
         <div className="admin-view-container">
