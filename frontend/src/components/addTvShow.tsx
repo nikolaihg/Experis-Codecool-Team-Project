@@ -28,6 +28,7 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 	const [lists, setLists] = useState<UserListOption[]>([]);
 	const [listsError, setListsError] = useState<string>("");
 	const [selectedShow, setSelectedShow] = useState<TVShowOption | null>(tvShow ?? null);
+	const [searchResetTrigger, setSearchResetTrigger] = useState(0);
 
 	const { user } = useAuth();
 	const userId = user?.id;
@@ -125,8 +126,7 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 				await addTvShowToList(Number(payload.userListId), payload.tvShowId.toString(), Number(payload.status), payload.rating);
 				onAdd();
 				setSuccess("Added to list.");
-				setForm(defaultForm);
-				setSelectedShow(null);
+				resetForm();
 			} else {
 				console.log("UserId was undefined when adding tvshow")
 			}
@@ -139,13 +139,21 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 		}
 	};
 
+	function resetForm() {
+		setForm(defaultForm);
+		setSelectedShow(null);
+		setSearchResetTrigger((prev) => prev + 1);
+		console.log("Form reset");
+		}
+
+
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit} id="myForm">
 			<h2>Add TV show</h2>
 
 			<div>
 				<label>TV show</label>
-				<TvShowSearch onSelect={handleShowSelect} />
+				<TvShowSearch onSelect={handleShowSelect} resetTrigger={searchResetTrigger} />
 				{selectedShow ? <p>Selected: {selectedShow.title}</p> : null}
 			</div>
 
