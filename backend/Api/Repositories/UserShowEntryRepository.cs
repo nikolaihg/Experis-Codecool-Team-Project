@@ -30,6 +30,12 @@ public class UserShowEntryRepository : IUserShowEntryRepository
         return await _context.UserShowEntries.FirstOrDefaultAsync(c => c.Id == id);
     }
 
+    public async Task<bool> ExistsInList(int userListId, int tvShowId)
+    {
+        return await _context.UserShowEntries
+            .AnyAsync(entry => entry.UserListId == userListId && entry.TVShowId == tvShowId);
+    }
+
     public async Task<bool> Update(int id, UserShowEntry item)
     {
         var existing = await _context.UserShowEntries.FirstOrDefaultAsync(x => x.Id == id);

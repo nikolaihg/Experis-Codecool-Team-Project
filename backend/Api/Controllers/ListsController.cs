@@ -160,6 +160,10 @@ public class ListsController : ControllerBase
 
         if (list.UserId != userId) return Forbid();
 
+        var exists = await _userShowEntryRepository.ExistsInList(id, itemDto.TvShowId);
+        if (exists)
+            return Conflict("TV show is already in this list.");
+
         var entry = new UserShowEntry
         {
             UserListId = id,

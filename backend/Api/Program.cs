@@ -39,19 +39,6 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// CORS
-//var myAllowedOrigins = "_myAllowedOrigins";
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: myAllowedOrigins,
-//        policy =>
-//        {
-//            policy.WithOrigins("http://localhost:5173")
-//                .AllowAnyHeader()
-//                .AllowAnyMethod();
-//        });
-//});
-
 // Jwt & RBAC stuff
 builder.Services.AddAuthentication(options =>
     {
@@ -114,41 +101,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseCors(myAllowedOrigins);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Run migrations automatically
+// Run migrations and seed data automatically
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
     if (db.Database.IsRelational())
     {
-        await DbSeeder.SeedAsync(db);
-        db.Database.Migrate();
-    }
-}
-
-// Ensure required Identity roles exist (synchronous blocking call is fine during startup)
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var requiredRoles = new[] { "User", "Admin" };
-    foreach (var roleName in requiredRoles)
-    {
-        var exists = roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult();
-        if (!exists)
-        {
-            var createResult = roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
-            if (!createResult.Succeeded)
-            {
-                var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
-                throw new Exception($"Failed to create role '{roleName}': {errors}");
-            }
-        }
+        await DbSeeder.SeedAsync(db, userManager, roleManager);
     }
 }
 

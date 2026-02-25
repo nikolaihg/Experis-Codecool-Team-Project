@@ -4,9 +4,10 @@ import { useAuth } from "../auth/AuthContext";
 
 type TvShowSearchProps = {
     onSelect?: (show: TVShow) => void;
+  resetTrigger?: number;
 };
 
-export default function TvShowSearch({ onSelect } : TvShowSearchProps) {
+export default function TvShowSearch({ onSelect, resetTrigger = 0 } : TvShowSearchProps) {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<TVShow[]>([]);
   const [showList, setShowList] = useState<boolean>(false);
@@ -19,6 +20,14 @@ export default function TvShowSearch({ onSelect } : TvShowSearchProps) {
     const t = setTimeout(() => setDebounced(query), 300);
     return () => clearTimeout(t);
   }, [query]);
+
+  useEffect(() => {
+    setQuery("");
+    setDebounced("");
+    setResults([]);
+    setShowList(false);
+    setUserTyping(false);
+  }, [resetTrigger]);
 
   useEffect(() => {
     const search = async () => {
