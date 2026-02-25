@@ -132,7 +132,7 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 			}
 		
 		} catch (err) {
-			setError("Failed to add TV show. Try again.");
+			setError(err instanceof Error ? err.message : "Failed to add TV show. Try again.");
 			console.error(err);
 		} finally {
 			setIsSubmitting(false);
