@@ -8,19 +8,25 @@ function LoginPage() {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // stops page refresh
+    setErrorMessage("");
     console.log("Logging in with:", { username, password });
-    // Here you'll call your login API later
     try {
       await login(username, email, password)
+      navigate("/")
     } catch (err) {
+      if (err instanceof Error) {
+        setErrorMessage(err.message);
+      } else {
+        setErrorMessage("Login failed. Please check your details and try again.");
+      }
       console.log(err)
     }
-    navigate("/")
   };
 
   return (
@@ -56,6 +62,7 @@ function LoginPage() {
           autoComplete="current-password"
         />
       </div>
+      {errorMessage && <p style={{ color: "red", textAlign: "center" }}>{errorMessage}</p>}
       <button type="submit">Log in</button>
 
       <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>

@@ -69,7 +69,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     body: JSON.stringify({username, email, password}),
                 })
             if (!response.ok) {
-                throw new Error("Invalid credentials");
+                const errorText = await response.text();
+                throw new Error(errorText || "Invalid credentials");
             }
 
             const json = await response.json()
@@ -84,6 +85,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } catch(err) {
             if (err instanceof Error)
                 console.log(err.message)
+            throw err;
         }
     }
 
