@@ -124,8 +124,12 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DbSeeder.SeedAsync(db);
-    db.Database.Migrate();
+
+    if (db.Database.IsRelational())
+    {
+        await DbSeeder.SeedAsync(db);
+        db.Database.Migrate();
+    }
 }
 
 // Ensure required Identity roles exist (synchronous blocking call is fine during startup)
@@ -149,3 +153,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public partial class Program { }
