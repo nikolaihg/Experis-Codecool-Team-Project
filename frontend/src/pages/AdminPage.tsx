@@ -8,7 +8,7 @@ import type { JwtClaims } from "../types"
 import "../components/Header/Header.css"
 import "./AdminPage.css"
 
-const AdminPage = () => {
+function AdminPage() {
     const { token } = useAuth()
     const [activeView, setActiveView] = useState<'claims' | 'tvshows' | 'users'>('tvshows')
 
