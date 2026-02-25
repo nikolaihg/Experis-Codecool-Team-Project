@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { LoadingComponent } from "../components/Loading/Loading";
+import { useDelayedSpinner } from "../hooks/useDelayedSpinner";
 
 
 const Register: React.FC = () => {
@@ -9,6 +11,8 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const showSpinner = useDelayedSpinner(loading);
   const { register } = useAuth()
   const navigate = useNavigate()
 
@@ -44,13 +48,19 @@ const Register: React.FC = () => {
     }
     console.log("Registering with:", { username, password });
     // Here you'll call your registration API later
+    setLoading(true)
     try {
       await register(username, email, password)
     } catch(err){
       console.log(err)
+    } finally {
+      setLoading(false)
     }
     navigate("/")
   };
+
+  if (loading && showSpinner) return <LoadingComponent />;
+  if (loading && !showSpinner) return null;
 
   return (
     <form onSubmit={handleSubmit}>

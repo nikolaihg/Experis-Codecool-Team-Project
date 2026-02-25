@@ -2,12 +2,16 @@ import React from "react";
 import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { LoadingComponent } from "../components/Loading/Loading";
+import { useDelayedSpinner } from "../hooks/useDelayedSpinner";
 
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const showSpinner = useDelayedSpinner(loading);
   const { login } = useAuth()
   const navigate = useNavigate()
 
@@ -15,13 +19,19 @@ const Login: React.FC = () => {
     e.preventDefault(); // stops page refresh
     console.log("Logging in with:", { username, password });
     // Here you'll call your login API later
+    setLoading(true)
     try {
       await login(username, email, password)
     } catch (err) {
       console.log(err)
+    } finally {
+      setLoading(false)
     }
     navigate("/")
   };
+
+  if (loading && showSpinner) return <LoadingComponent />;
+  if (loading && !showSpinner) return null;
 
   return (
     <form onSubmit={handleSubmit}>
