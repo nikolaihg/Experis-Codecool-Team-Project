@@ -1,5 +1,5 @@
 import { useState } from "react"
-import styles from "../components/addTvShow.module.css"
+import styles from "../components/AddTvShow.module.css"
 import { AddTvShow } from "./AddTvShow"
 
 type AddTvShowButtonProps = {
