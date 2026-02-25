@@ -7,6 +7,15 @@ import { Header } from './components/Header/Header'
 import { Footer } from './components/Footer/Footer'
 import { ProfileMenu } from './components/Header/ProfileMenu'
 
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import NotFoundPage from './pages/NotFoundPage'
+import HomePage from './pages/HomePage'
+import AboutPage from './pages/AboutPage'
+import WatchListsPage from './pages/WatchListsPage'
+import ProfilePage from './pages/ProfilePage'
+import AdminPage from './pages/AdminPage'
+
 
 function App() {
   return (
@@ -14,16 +23,16 @@ function App() {
       <Header />
       <main className="app-content">
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="*" element={<NotFoundPage />}></Route>
 
           <Route element={<RequireAuth />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/watchlist" element={<WatchListsPage />} />
             <Route path="/profilemenu" element={<ProfileMenu />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
           <Route element={<RequireAdmin />}>
