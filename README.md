@@ -21,20 +21,26 @@ Development is done in an agile style with 4 planned sprints and a linked github
 
 ## Environment Setup
 ### Backend
-Backend uses `dotnet user-secrets` so if you have cloned this project run: 
+Backend uses `dotnet user-secrets` for local development. Run these commands to set up your local secrets:
 ```bash
-# 1. init
+# 1. Navigate to the API project
 cd backend/Api
+
+# 2. Initialize user secrets (if not already done)
 dotnet user-secrets init
-# 2. Set postgres connection string
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=tvshowlogger;Username=YOURUSERNAME;Password=YOURPASSWORD"
-# 3. Set JWT signingKey
-dotnet user-secrets set "Jwt:SigningKey" "SUPERLONGSECRETKEYDONTSHAREMIN32CHARS"
-# 4. Change issuer and audience in ./backend/Api/appsettings.Docker.json if you want to change these
+
+# 3. Set PostgreSQL connection string (adjust username/password as needed)
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=tvshowlogger;Username=postgres;Password=postgres"
+
+# 4. Set JWT Signing Key (must be at least 32 characters)
+dotnet user-secrets set "Jwt:SigningKey" "REPLACE_WITH_A_VERY_LONG_SECRET_KEY_FOR_LOCAL_DEV"
 ```
 
 ### Frontend
-Vite defaults to `localhost:5173` but this is configurable via `./frontend/.env.example` if needed.
+The frontend connects to the backend API.
+- **Local Dev**: Defaults to `http://localhost:5173` (Vite).
+- **Docker**: Served via Nginx at `http://localhost:3000`.
+
 ### Docker Compose
 #### Diagram
 ```mermaid
@@ -69,16 +75,25 @@ flowchart TB
 ```
 
 #### Running
-Docker compose uses an environment file called `.env.docker` located in root.  
-So start by `cp .env.docker.example .env.docker` and fill out your secrets if you want to use docker compose. 
-Then run the containers using:  
-```bash
-docker compose --env-file .env.docker up --build
-```
-Ports: 
-- The API will be available at `http://localhost:8080` 
-- PostgreSQL at `http://localhost:5432`
-- Nginx reverse proxy (Frontend) at `http://localhost:3000`
+Docker Compose uses the `.env.docker` file in the root directory for configuration.
+
+1. Create your docker environment file:
+   ```bash
+   cp .env.docker.example .env.docker
+   ```
+2. Open `.env.docker` and update the values:
+   - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
+   - `Jwt__SigningKey` (Required for the API container)
+
+3. Run the application:
+   ```bash
+   docker compose --env-file .env.docker up --build
+   ```
+
+**Ports:**
+- **Frontend (Nginx):** `http://localhost:3000` (Main entry point)
+- **API (Direct):** `http://localhost:8080` (For debugging)
+- **PostgreSQL:** `localhost:5432`
 
 > **Note:** We are exposing port 8080 (API) directly for development and debugging convenience. In a production environment, this port would typically be closed, and all traffic would be routed through the Nginx reverse proxy on port 3000.
 
