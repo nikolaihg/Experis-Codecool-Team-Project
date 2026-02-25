@@ -4,7 +4,7 @@ import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 
-const Login: React.FC = () => {
+function LoginPage() {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("");
@@ -62,8 +62,8 @@ const Login: React.FC = () => {
         <p style={{ margin: '0 0 0.25rem', fontSize: '0.9em', color: 'var(--color-text-muted)' }}>
           Don't have an account?
         </p>
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={() => navigate("/register")}
           style={{ width: '100%' }}
         >
@@ -74,4 +74,4 @@ const Login: React.FC = () => {
   );
 }
 
-export default Login;
+export default LoginPage;

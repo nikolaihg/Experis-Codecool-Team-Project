@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TVShowCard } from "../components/TVShowCard";
 import { useAuth } from "../auth/AuthContext";
 import type { UserShowEntry } from "../types";
 import { AddTvShowButton } from "../components/AddTvShowButton";
 
 
-const Home: React.FC = () => {
+function HomePage() {
   const { token } = useAuth()
   const [diaryEntryList, setDiaryEntryList] = useState<UserShowEntry[]>([])
 
@@ -50,4 +50,4 @@ const Home: React.FC = () => {
   )
 };
 
-export default Home;
+export default HomePage;

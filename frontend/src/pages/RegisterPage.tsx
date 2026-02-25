@@ -4,7 +4,7 @@ import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 
-const Register: React.FC = () => {
+function RegisterPage(){
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
@@ -119,4 +119,4 @@ const Register: React.FC = () => {
   );
 }
 
-export default Register;
+export default RegisterPage;

@@ -5,7 +5,7 @@ import { WatchListCard } from "../components/WatchListCard";
 import { AddTvShowButton } from "../components/AddTvShowButton";
 import styles from "./WatchListsPage.module.css";
 
-const WatchListsPage: React.FC = () => {
+function WatchListsPage() {
   const { token } = useAuth();
   const [watchLists, setWatchLists] = useState<UserList[]>([]);
   const [name, setName] = useState("");
@@ -39,7 +39,7 @@ const WatchListsPage: React.FC = () => {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if(!name.trim()) return;
+    if (!name.trim()) return;
     await createWatchList();
     setName("");
   }

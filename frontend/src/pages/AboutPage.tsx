@@ -1,6 +1,4 @@
-import React from "react";
-
-const About: React.FC = () => {
+function AboutPage() {
   return (
     <div className="page-container">
       <h1>About</h1>
@@ -19,4 +17,4 @@ const About: React.FC = () => {
   );
 };
 
-export default About;
+export default AboutPage;

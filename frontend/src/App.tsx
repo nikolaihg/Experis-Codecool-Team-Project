@@ -7,15 +7,6 @@ import { Header } from './components/Header/Header'
 import { Footer } from './components/Footer/Footer'
 import { ProfileMenu } from './components/Header/ProfileMenu'
 
-import Home from './pages/Home'
-import About from './pages/About'
-import WatchListsPage from './pages/WatchListsPage'
-import Login from './pages/login'
-import Register from './pages/register'
-import { Profile } from './pages/Profile' 
-
-import NotFoundPage from './pages/NotFoundPage'
-import AdminPage from './pages/AdminPage'
 
 function App() {
   return (
