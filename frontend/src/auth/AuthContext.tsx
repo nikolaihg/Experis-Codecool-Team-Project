@@ -69,6 +69,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     body: JSON.stringify({username, email, password}),
                 })
             if (!response.ok) {
+                if (response.status === 400 || response.status === 401) {
+                     throw new Error("Invalid credentials");
+                }
+
                 const errorText = await response.text();
                 throw new Error(errorText || "Invalid credentials");
             }
@@ -107,7 +111,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     body: JSON.stringify({username, email, password}),
                 })
             if (!response.ok) {
-                throw new Error("Invalid credentials");
+                const errorData = await response.json().catch(() => null);
+                if (Array.isArray(errorData) && errorData.length > 0) {
+                    if (errorData.some((e: {code: string}) => e.code === "DuplicateUserName")) {
+                        throw new Error("Username is already taken");
+                    }
+                    if (errorData[0].description) {
+                        throw new Error(errorData.map((e: {description: string}) => e.description).join("\n"));
+                    }
+                }
+                throw new Error("Registration failed");
             }
 
             const json = await response.json()
@@ -125,8 +138,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             console.log(tokenFromServer)
  
         } catch(err) {
-            if (err instanceof Error)
-                console.log(err.message)
+            console.error("Registration error:", err);
+            throw err;
         }
     }
 

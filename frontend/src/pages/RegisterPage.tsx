@@ -8,6 +8,7 @@ function RegisterPage(){
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   const { register } = useAuth()
   const navigate = useNavigate()
@@ -38,18 +39,23 @@ function RegisterPage(){
     e.preventDefault(); // stops page refresh
     const errors = validatePassword(password);
     setPasswordErrors(errors);
+    setServerError(null);
 
     if (errors.length > 0) {
       return;
     }
     console.log("Registering with:", { username, password });
-    // Here you'll call your registration API later
     try {
       await register(username, email, password)
+      navigate("/")
     } catch(err){
+      if (err instanceof Error) {
+        setServerError(err.message);
+      } else {
+        setServerError("Registration failed. Please try again.");
+      }
       console.log(err)
     }
-    navigate("/")
   };
 
   return (
@@ -89,7 +95,7 @@ function RegisterPage(){
           }}
           autoComplete="new-password"
           minLength={8}
-          pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?:{}|<>]).{8,}"
+          pattern="(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*\(\),.?:\{\}\|<>]).{8,}"
           title="Password must be at least 8 characters and include one capital letter, one number, and one special character."
         />
         {passwordErrors.length > 0 && (
@@ -102,6 +108,16 @@ function RegisterPage(){
       </div>
 
       <button type="submit">Register</button>
+      {serverError && (
+        <p style={{ 
+          color: "red", 
+          marginTop: "10px",
+          textAlign: "center",
+          whiteSpace: "pre-wrap"
+        }}>
+          {serverError}
+        </p>
+      )}
       
       <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
         <p style={{ margin: '0 0 0.25rem', fontSize: '0.9em', color: 'var(--color-text-muted)' }}>
