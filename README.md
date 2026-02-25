@@ -107,3 +107,22 @@ For faster development iteration, run just the PostgreSQL container and run the 
 The repo folder `\project-documentation` contains diagrams, notes and other important documents created and gathered while we planned / developed this application.  
 - Diagrams: `class-diagram.png`, `system-architecture-diagram.png`, `use-case-diagram.png`,
 - Notes: `brainstorming.md`, etc
+
+## Deployment Flow
+```mermaid
+graph TD
+    subgraph Backend [Backend Deployment]
+        direction TB
+        B_Action[CI: build-and-test-backend]
+        B_Action --> B_DockerHub[CD: Publish to DockerHub]
+        B_DockerHub --> |Pull Image| B_Azure[Azure App Service]
+    end
+
+    subgraph Frontend [Frontend Deployment]
+        direction TB
+        F_Action[CI: build-and-test-frontend] --> |Azure Action| F_Static[Azure Static Web App]
+        F_Action --> F_DockerHub[CD: Publish to DockerHub]
+    end
+
+    F_Static -.-> |Uses External API| B_Azure
+```
