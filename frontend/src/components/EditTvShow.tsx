@@ -5,11 +5,11 @@ import type { UserShowEntry } from "../types";
 import { useAuth } from "../auth/AuthContext";
 
 export const STATUS_MAP = {
-  1: "Planning",
-  2: "Watching",
-  3: "Completed",
-  4: "OnHold",
-  5: "Dropped",
+  0: "Planning",
+  1: "Watching",
+  2: "Completed",
+  3: "OnHold",
+  4: "Dropped",
 } as const;
 
 type EditForm = {

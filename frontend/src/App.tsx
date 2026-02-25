@@ -1,18 +1,21 @@
 import './App.css'
 import { Route, Routes } from 'react-router-dom'
+import { RequireAuth } from './auth/RequireAuth'
+import { RequireAdmin } from './auth/RequireAdmin'
+
 import { Header } from './components/Header/Header'
 import { Footer } from './components/Footer/Footer'
+import { ProfileMenu } from './components/Header/ProfileMenu'
 
 import Home from './pages/Home'
 import About from './pages/About'
-import WatchList from './pages/WatchList'
+import WatchListsPage from './pages/WatchListsPage'
 import Login from './pages/login'
 import Register from './pages/register'
-import { RequireAuth } from './auth/RequireAuth'
 import { Profile } from './pages/Profile' 
-import { ProfileMenu } from './components/Header/ProfileMenu'
 
 import NotFoundPage from './pages/NotFoundPage'
+import AdminPage from './pages/AdminPage'
 
 function App() {
   return (
@@ -27,9 +30,13 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/watchlist" element={<WatchList />} />
+            <Route path="/watchlist" element={<WatchListsPage />} />
             <Route path="/profilemenu" element={<ProfileMenu />} />
-            <Route path="/profile" element={<Profile />} /> 
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Routes>
       </main>

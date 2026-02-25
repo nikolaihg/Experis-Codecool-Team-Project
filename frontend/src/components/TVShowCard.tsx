@@ -6,11 +6,11 @@ import { useState } from "react";
 
 
 const STATUS_MAP = {
-  1: "Planning",
-  2: "Watching",
-  3: "Completed",
-  4: "OnHold",
-  5: "Dropped",
+  0: "Planning",
+  1: "Watching",
+  2: "Completed",
+  3: "OnHold",
+  4: "Dropped",
 }
 
 const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATUS_MAP] ?? "Unknown";

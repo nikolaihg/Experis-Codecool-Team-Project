@@ -1,11 +1,12 @@
 import { useMemo, useState, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styles from "./addTvShow.module.css";
-import { getUserLists, addTvShowToList } from "../services/api";
 import { useAuth } from "../auth/AuthContext"
 import TvShowSearch from "./TvShowSearch";
 import type { TVShow } from "../types";
 import type { FormState, TVShowOption, UserListOption, AddTvShowPayload } from "../types";
+import { getUserLists } from "../services/api/lists.api";
+import { addTvShowToList } from "../services/api/tvshows.api";
 
 type AddTvShowProps = {
   tvShow?: TVShowOption | null;
@@ -105,8 +106,8 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 		}
 
 		const ratingValue = form.rating.trim() === "" ? undefined : Number(form.rating);
-		if (ratingValue !== undefined && (Number.isNaN(ratingValue) || ratingValue < 0 || ratingValue > 5)) {
-			setError("Rating must be a number from 0 to 5.");
+		if (ratingValue !== undefined && (Number.isNaN(ratingValue) || ratingValue < 1 || ratingValue > 10)) {
+			setError("Rating must be a number from 1 to 10.");
 			console.log("Submission error: Invalid rating value");
 			return;
 		}
@@ -172,12 +173,12 @@ export function AddTvShow({ tvShow, onAdd }: AddTvShowProps) {
 			</div>
 
 			<div>
-				<label htmlFor="rating">Rating (0-5)</label>
+				<label htmlFor="rating">Rating (1-10)</label>
 				<input
 					id="rating"
 					type="number"
-					min={0}
-					max={5}
+					min={1}
+					max={10}
 					step={1}
 					value={form.rating}
 					onChange={handleChange("rating")}
