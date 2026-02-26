@@ -55,9 +55,20 @@
   font-size: 15px;
 }
 
+.descriptionRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 15px;
+}
+
 .label {
   font-weight: 600;
   color: var(--color-text-dim);
+}
+
+.description {
+  word-break: break-word;
 }
 
 .actions {

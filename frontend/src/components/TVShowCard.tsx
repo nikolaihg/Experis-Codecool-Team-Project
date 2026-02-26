@@ -15,13 +15,28 @@ const STATUS_MAP = {
 
 const getStatus = (code: number) => STATUS_MAP[code as keyof typeof STATUS_MAP] ?? "Unknown";
 
+const formatLoggedAt = (loggedAt: string) => {
+    const date = new Date(loggedAt);
+    if (Number.isNaN(date.getTime())) return "Unknown";
+
+    return new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    }).format(date);
+};
+
 
 type TVShowCardProps = {
     entry: UserShowEntry
     onChange: () => void
+    showLoggedAt?: boolean
+    showRating?: boolean
 };
 
-export function TVShowCard({ entry, onChange }: TVShowCardProps ) {
+export function TVShowCard({ entry, onChange, showLoggedAt = true, showRating = true }: TVShowCardProps ) {
     const { token } = useAuth()
     const [editing, setEditing] = useState(false);
     const openEdit = () => setEditing(true);
@@ -90,10 +105,29 @@ export function TVShowCard({ entry, onChange }: TVShowCardProps ) {
                 <span>{getStatus(entry.status)}</span>
                 </div>
 
+                {showRating && (
                 <div className={styles.row}>
                 <span className={styles.label}>Your rating:</span>
                 <span>{entry.rating}/10</span>
                 </div>
+                )}
+
+                <div className={styles.row}>
+                <span className={styles.label}>Episodes:</span>
+                <span>{entry.tvShow.amountOfEpisodes}</span>
+                </div>
+
+                <div className={styles.descriptionRow}>
+                <span className={styles.label}>Description: </span>
+                <span className={styles.description}>{entry.tvShow.description}</span>
+                </div>
+
+                {showLoggedAt && (
+                <div className={styles.row}>
+                <span className={styles.label}>Logged:</span>
+                <span>{formatLoggedAt(entry.loggedAt)}</span>
+                </div>
+                )}
             </div>
 
             <EditTvShow

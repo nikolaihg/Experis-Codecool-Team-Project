@@ -32,7 +32,7 @@ export function WatchListCard({ userList, onChange }: WatchListProps) {
         <p>No tv shows entries yet. Add your first show!</p>
       ) : (
         userList.userShowEntryList.map((e) => (
-          <TVShowCard key={e.id} entry={e} onChange={onChange} />
+          <TVShowCard key={e.id} entry={e} onChange={onChange} showLoggedAt={false} showRating={false} />
         ))
       )}
     </div>

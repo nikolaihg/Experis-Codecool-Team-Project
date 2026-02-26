@@ -65,7 +65,7 @@ function ProfilePage() {
 
   if (!isAuthenticated) {
     return (
-      <div style={{ padding: 24 }}>
+      <div className="page-container" style={{ padding: 24, maxWidth: 720, textAlign: "center" }}>
         <h2>You are not logged in</h2>
         <button onClick={() => navigate("/")}>Back to home</button>
       </div>
@@ -73,17 +73,18 @@ function ProfilePage() {
   }
 
   if (loading && showSpinner) return <LoadingComponent />;
-  if (error) return <p style={{ color: "crimson" }}>{error}</p>;
+  if (error) return <p className="page-container" style={{ color: "crimson", maxWidth: 720, textAlign: "center" }}>{error}</p>;
   if (loading && !showSpinner) return null;
 
-  if (!profile) return <p>No profile found.</p>;
+  if (!profile) return <p className="page-container" style={{ maxWidth: 720, textAlign: "center" }}>No profile found.</p>;
 
   return (
-    <div style={{ padding: 24, maxWidth: 720 }}>
+    <div className="page-container" style={{ padding: 24, maxWidth: 720, textAlign: "center" }}>
       <div
         style={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           gap: 16,
           marginBottom: 18,
         }}
