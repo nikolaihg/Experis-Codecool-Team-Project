@@ -1,13 +1,22 @@
+export type User = {
+  id: string;
+  email: string;
+  userName: string;
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+};
+
 export type TVShow = {
-    id: string,
-    title: string,
-    description: string,
-    posterUrl: string,
-    status: number,
-    imdbRating: number,
-    releaseYear: number,
-    genre: string,
-    amountOfEpisodes: number
+  id: string,
+  title: string,
+  description: string,
+  posterUrl: string,
+  status: number,
+  imdbRating: number,
+  releaseYear: number,
+  genre: string,
+  amountOfEpisodes: number
 }
 
 export type UserShowEntry = {
@@ -56,10 +65,10 @@ export type FormState = {
 };
 
 export type JwtPayload = {
-    sub?: string;
-    email?: string;
-    nameid?: string;
-    [key: string]: unknown;
+  sub?: string;
+  email?: string;
+  nameid?: string;
+  [key: string]: unknown;
 };
 
 export interface JwtClaims {
