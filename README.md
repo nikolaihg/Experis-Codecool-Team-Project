@@ -8,6 +8,8 @@
 Goal: Develop a fullstack application with .NET, React, PostgreSQL  
 Development is done in an agile style with 4 planned sprints and a linked github project page for this specific repo: [Experis-Codecool-team-project](https://github.com/users/nikolaihg/projects/2)
 
+Azure: frontend is deployed on [azure](https://yellow-moss-0111d9403.4.azurestaticapps.net/).
+
 ## Getting Started
 ### Prerequisites
 - .NET SDK 10
