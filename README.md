@@ -136,9 +136,9 @@ graph TD
         F_CI --> F_DH[CD: publish-fronted-dockerhub]
         F_CI --> F_AZ[CD: azure-static-web-apps]
         F_DH --> F_IMG[(Docker Hub: tvshowlogger-frontend)]
+        F_AZ --> F_Static[Azure Static Web App]
     end
 
-    F_AZ --> F_Static[Azure Static Web App]
     F_Static -.-> |linked to Backend API| B_Azure
 ```
 
