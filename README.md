@@ -8,7 +8,11 @@
 Goal: Develop a fullstack application with .NET, React, PostgreSQL  
 Development is done in an agile style with 4 planned sprints and a linked github project page for this specific repo: [Experis-Codecool-team-project](https://github.com/users/nikolaihg/projects/2)
 
-Azure: frontend is deployed on [azure](https://yellow-moss-0111d9403.4.azurestaticapps.net/).
+### Azure
+
+The frontend is continuously deployed to Azure Static Web Apps through the GitHub Actions workflow on pushes to `main`. You can access the deployed frontend here: [https://yellow-moss-0111d9403.4.azurestaticapps.net](https://yellow-moss-0111d9403.4.azurestaticapps.net).
+
+The backend is deployed to Azure App Service using the Docker image published by the `publish-backend-dockerhub.yml` workflow. On updates to `main`, a new backend image is built, pushed to Docker Hub, and then consumed by the Azure App Service runtime as part of the deployment process.
 
 ## Getting Started
 ### Prerequisites
@@ -135,7 +139,7 @@ graph TD
     end
 
     F_AZ --> F_Static[Azure Static Web App]
-    F_Static -.-> |Calls API| B_Azure
+    F_Static -.-> |linked to Backend API| B_Azure
 ```
 
 1. Code changes trigger scoped CI workflows based on changed paths (`backend/**` or `frontend/**`).
