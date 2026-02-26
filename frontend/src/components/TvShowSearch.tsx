@@ -88,7 +88,7 @@ export default function TvShowSearch({ onSelect, resetTrigger = 0 }: TvShowSearc
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
-      <div style={{ position: "relative", display: "inline-block", width: 250 }} aria-busy={loading}>
+      <div style={{ position: "relative", width: "100%" }} aria-busy={loading}>
         <input
           className="search"
           type="search"
@@ -143,10 +143,26 @@ export default function TvShowSearch({ onSelect, resetTrigger = 0 }: TvShowSearc
               style={{
                 padding: "8px 10px",
                 cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
               }}
               onClick={() => handleSelect(r)}
             >
-              {r.title}
+              {r.posterUrl && (
+                <img
+                  src={r.posterUrl}
+                  alt={`${r.title} poster`}
+                  style={{
+                    width: 28,
+                    height: 42,
+                    objectFit: "cover",
+                    borderRadius: 2,
+                    flexShrink: 0,
+                  }}
+                />
+              )}
+              <span>{r.title} ({r.releaseYear})</span>
             </div>
           ))}
         </div>
