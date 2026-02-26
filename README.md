@@ -1,5 +1,11 @@
 # Codecool bootcamp Jan-Feb 2026
-Goal: Develop a fullstack data-driven application with .NET, React, PostgreSQL  
+[![Backend CI](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/build-and-test-backend.yml/badge.svg?branch=main)](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/build-and-test-backend.yml)
+[![Frontend CI](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/build-and-test-frontend.yml/badge.svg?branch=main)](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/build-and-test-frontend.yml)
+[![Backend Docker Publish](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/publish-backend-dockerhub.yml/badge.svg?branch=main)](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/publish-backend-dockerhub.yml)
+[![Frontend Docker Publish](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/publish-fronted-dockerhub.yml/badge.svg?branch=main)](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/publish-fronted-dockerhub.yml)
+[![Azure Static Web App Publish](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/azure-static-web-apps-yellow-moss-0111d9403.yml/badge.svg?branch=main)](https://github.com/nikolaihg/Experis-Codecool-Team-Project/actions/workflows/azure-static-web-apps-yellow-moss-0111d9403.yml)
+
+Goal: Develop a fullstack application with .NET, React, PostgreSQL  
 Development is done in an agile style with 4 planned sprints and a linked github project page for this specific repo: [Experis-Codecool-team-project](https://github.com/users/nikolaihg/projects/2)
 
 ## Getting Started
@@ -103,26 +109,44 @@ For faster development iteration, run just the PostgreSQL container and run the 
 - `dotnet run /backend/Api`
 - `npm run dev /frontend`
 
-## Project documentation
-The repo folder `\project-documentation` contains diagrams, notes and other important documents created and gathered while we planned / developed this application.  
-- Diagrams: `class-diagram.png`, `system-architecture-diagram.png`, `use-case-diagram.png`,
-- Notes: `brainstorming.md`, etc
 
 ## Deployment Flow
+This repository uses GitHub Actions for CI and release automation of frontend and backend artifacts.
+
 ```mermaid
 graph TD
-    subgraph Backend [Backend Deployment]
+    subgraph Backend [Backend Pipeline]
         direction TB
-        B_Action[CI: build-and-test-backend]
-        B_Action --> B_DockerHub[CD: Publish to DockerHub]
-        B_DockerHub --> |Pull Image| B_Azure[Azure App Service]
+        B_CI[CI: build-and-test-backend]
+        B_CD[CD: publish-backend-dockerhub]
+        B_CI --> B_CD
+        B_CD --> B_IMG[(Docker Hub: tvshowlogger-api-csharp)]
+        B_IMG -. consumed by .-> B_Azure[Azure App Service]
     end
 
-    subgraph Frontend [Frontend Deployment]
+    subgraph Frontend [Frontend Pipeline]
         direction TB
-        F_Action[CI: build-and-test-frontend] --> |Azure Action| F_Static[Azure Static Web App]
-        F_Action --> F_DockerHub[CD: Publish to DockerHub]
+        F_CI[CI: build-and-test-frontend]
+        F_CI --> F_DH[CD: publish-fronted-dockerhub]
+        F_CI --> F_AZ[CD: azure-static-web-apps]
+        F_DH --> F_IMG[(Docker Hub: tvshowlogger-frontend)]
     end
 
-    F_Static -.-> |Uses External API| B_Azure
+    F_AZ --> F_Static[Azure Static Web App]
+    F_Static -.-> |Calls API| B_Azure
 ```
+
+1. Code changes trigger scoped CI workflows based on changed paths (`backend/**` or `frontend/**`).
+2. Docker publish workflows create versioned images (`latest`, tag, and SHA) and sign images with Cosign.
+3. Frontend is deployed to Azure Static Web Apps via the Azure workflow.
+4. Backend deployment target (Azure App Service) pulls a published backend image as part of the infrastructure/runtime process.
+
+## Project Documentation
+The `project-documentation` folder contains planning material, architecture notes, diagrams, and references used during development.
+
+- API proposal: [project-documentation/api-refactor-proposal.md](project-documentation/api-refactor-proposal.md)
+- Brainstorming notes: [project-documentation/brainstorming.md](project-documentation/brainstorming.md)
+- OpenAPI snapshot: [project-documentation/openapi-18-02-26.json](project-documentation/openapi-18-02-26.json)
+- Class diagram draft: [project-documentation/diagrams/classv2.txt](project-documentation/diagrams/classv2.txt)
+- System diagram draft: [project-documentation/diagrams/systemdiagram.txt](project-documentation/diagrams/systemdiagram.txt)
+- Presentation assets: [project-documentation/presentations](project-documentation/presentations).
